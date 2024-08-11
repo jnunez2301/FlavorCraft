@@ -40,7 +40,7 @@ const NutritionalInformation = styled.div`
   margin-bottom: 1rem;
   justify-items: end;
 `;
-const NutritionalLabel = styled.p`
+const NutritionalLabel = styled.h4`
   font-weight: bold;
   color: lightgray;
   span {

@@ -24,13 +24,13 @@ export const RecipePage = styled(motion.div)<{
   background-size: cover;
   background-position: center;
   border-top-right-radius: ${(props) =>
-    props.$pageNumber % 2 === 0 ? ".3rem" : "0"};
+    props.$pageNumber % 2 === 0 ? ".2rem" : "0"};
   border-bottom-right-radius: ${(props) =>
-    props.$pageNumber % 2 === 0 ? ".3rem" : "0"};
+    props.$pageNumber % 2 === 0 ? ".2rem" : "0"};
   border-bottom-left-radius: ${(props) =>
-    props.$pageNumber % 2 !== 0 ? ".3rem" : "0"};
+    props.$pageNumber % 2 !== 0 ? ".2rem" : "0"};
   border-top-left-radius: ${(props) =>
-    props.$pageNumber % 2 !== 0 ? ".3rem" : "0"};
+    props.$pageNumber % 2 !== 0 ? ".2rem" : "0"};
   .text {
     color: black;
     font-weight: bold;

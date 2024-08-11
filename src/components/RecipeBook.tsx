@@ -86,13 +86,13 @@ export const RecipeBook = () => {
                 transition: {
                   ease: "easeOut",
                   duration: 0.3,
-                }
+                },
               },
               onClick: () => handlePageRangeIncrement(),
               animate: {
                 x: [-120, 0, -20],
                 duration: 2,
-              }
+              },
             }
           : {
               whileHover: {
@@ -113,22 +113,18 @@ export const RecipeBook = () => {
     );
   };
   return (
-    <>
-      <div
-        className={css(`
+    <div
+      className={css(`
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
         position: relative;
       `)}
-      >
-        {/* It should display the page range based on mockPage */}
-        {mockPage
-          .slice(pageRange.start - 1, pageRange.end)
-          .map((page, index) => (
-            <Page key={index} {...page} />
-          ))}
-      </div>
-    </>
+    >
+      {/* It should display the page range based on mockPage */}
+      {mockPage.slice(pageRange.start - 1, pageRange.end).map((page, index) => (
+        <Page key={index} {...page} />
+      ))}
+    </div>
   );
 };
