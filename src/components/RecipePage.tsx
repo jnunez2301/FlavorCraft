@@ -31,9 +31,14 @@ export const RecipePage = styled(motion.div)<{
     props.$pageNumber % 2 !== 0 ? ".2rem" : "0"};
   border-top-left-radius: ${(props) =>
     props.$pageNumber % 2 !== 0 ? ".2rem" : "0"};
-  .text {
-    color: black;
+  .pageNumber {
     font-weight: bold;
+    position: absolute;
+    bottom: .3rem;
+    left: ${(props) => (props.$pageNumber % 2 !== 0 && ".5rem")};
+    right: ${(props) => (props.$pageNumber % 2 === 0 && ".5rem")};
+    mix-blend-mode: difference;
+    color: white;
   }
 
   @media (max-width: 1024px) {

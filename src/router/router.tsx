@@ -3,8 +3,10 @@ import {
   createRouter,
   createRoute,
   createRootRoute,
-} from '@tanstack/react-router'
-import { Home } from '../components/Home'
+} from "@tanstack/react-router";
+import { Home } from "../components/Home";
+import { Login } from "../auth/Login";
+import { Register } from "../auth/Register";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -12,22 +14,35 @@ const rootRoute = createRootRoute({
       <Outlet />
     </>
   ),
-})
+});
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/',
-  component: () => <Home/>
-})
+  path: "/",
+  component: () => <Home />,
+});
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "login",
+  component: () => <Login />,
+});
+const registerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "register",
+  component: () => <Register />,
+});
 
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  loginRoute,
+  registerRoute,
+]);
 
-const routeTree = rootRoute.addChildren([indexRoute])
+const router = createRouter({ routeTree });
 
-const router = createRouter({ routeTree })
-
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
-    router: typeof router
+    router: typeof router;
   }
 }
 

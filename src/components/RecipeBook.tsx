@@ -2,56 +2,11 @@ import { css } from "@emotion/css";
 import React from "react";
 import { PageInfo } from "../model/PageInfo";
 import { RecipePage } from "./RecipePage";
-import { Recipe, RecipeInfo } from "./RecipeInfo";
+import { RecipeInfo } from "./RecipeInfo";
+import { mockPage } from "./mockData";
+import { RecipeLoader } from "./RecipeLoader";
 
-const recipeExample: Recipe = {
-  title: "Pancake",
-  description: "A simple pancake recipe",
-  ingredients: ["1 cup flour", "1 cup milk", "1 egg"],
-  instructions: [
-    "Mix all ingredients together",
-    "Pour onto a hot pan",
-    "Cook until golden brown",
-  ],
-  sauceInstructions: ["Mix all ingredients together", "Serve with pancakes"],
-  sideDishesReeccomendations: ["Bacon", "Eggs", "Sausage"],
-  category: "Breakfast",
-  typeOfCousine: "American",
-  caloriesPerServing: 200,
-  servings: 4,
-  prepTime: 10,
-};
 export const RecipeBook = () => {
-  const mockPage: PageInfo[] = [
-    {
-      backgroundImg: "https://picsum.photos/id/301/1080/1920",
-      pageNumber: 1,
-    },
-    {
-      pageNumber: 2,
-      component: () => <RecipeInfo pageInfo={recipeExample} />,
-    },
-    {
-      backgroundImg: "https://picsum.photos/id/310/1080/1920",
-      pageNumber: 3,
-    },
-    {
-      pageNumber: 4,
-      component: () => <h1>Component 2</h1>,
-    },
-    {
-      backgroundImg: "https://picsum.photos/id/307/1080/1920",
-      pageNumber: 5,
-    },
-    {
-      pageNumber: 6,
-      component: () => <h1>Component 3</h1>,
-    },
-    {
-      backgroundImg: "https://picsum.photos/id/307/1080/1920",
-      pageNumber: 7,
-    },
-  ];
   const [pageRange, setPageRange] = React.useState({
     start: 1,
     end: 2,
@@ -72,7 +27,7 @@ export const RecipeBook = () => {
   };
   const Page = (page: PageInfo) => {
     return (
-      // @ts-expect-error: Property animated exist just an error while pageNumber is odd
+      //  @ts-expect-error: I had a expect error for this but i forgot what was it
       <RecipePage
         $backgroundImg={page.backgroundImg}
         $pageNumber={page.pageNumber}
@@ -107,13 +62,20 @@ export const RecipeBook = () => {
               onClick: () => handlePageRangeDecrement(),
             })}
       >
-        <p className="text">{page.pageNumber}</p>
-        {page.component && <page.component />}
+        <div>
+          <p className="pageNumber">{page.pageNumber}</p>
+        </div>
+        {page.recipeDetail ? (
+          <RecipeInfo pageInfo={page.recipeDetail} />
+        ) : (
+          page.pageNumber % 2 === 0 && <RecipeLoader />
+        )}
       </RecipePage>
     );
   };
   return (
     <div
+      id="recipe-book"
       className={css(`
         display: flex;
         justify-content: space-between;

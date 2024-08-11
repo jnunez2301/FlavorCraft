@@ -49,7 +49,7 @@ const NutritionalLabel = styled.h4`
 `;
 export const RecipeInfo = ({ pageInfo }: RecipeInfoProps) => {
   return (
-    <div>
+    <div id="recipe-info">
       <Title>{pageInfo.title}</Title>
       <SubTitle>Ingredients</SubTitle>
       <List>
