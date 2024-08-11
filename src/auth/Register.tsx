@@ -64,6 +64,7 @@ export const Register = () => {
           type="text"
           id="username"
           name="username"
+          placeholder="Username"
           {...form.getInputProps("username")}
         />
       </div>
@@ -73,6 +74,7 @@ export const Register = () => {
           type="email"
           id="email"
           name="email"
+          placeholder="Email"
           {...form.getInputProps("email")}
         />
       </div>
@@ -82,6 +84,7 @@ export const Register = () => {
           type="password"
           id="password"
           name="password"
+          placeholder="Password"
           {...form.getInputProps("password")}
         />
       </div>
@@ -91,6 +94,7 @@ export const Register = () => {
           type="password"
           id="confirmPassword"
           name="confirmPassword"
+          placeholder="Confirm Password"
           {...form.getInputProps("confirmPassword")}
         />
       </div>

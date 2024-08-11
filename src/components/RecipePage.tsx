@@ -10,6 +10,8 @@ export const RecipePage = styled(motion.div)<{
   justify-content: space-between;
   padding: 1rem;
   height: 95dvh;
+  max-height: 95vh;
+  overflow-y: auto;
   width: 50%;
   position: absolute;
   left: ${(props) => (props.$pageNumber % 2 === 0 ? "50%" : "0")};
