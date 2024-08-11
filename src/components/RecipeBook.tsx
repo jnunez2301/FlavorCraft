@@ -2,8 +2,26 @@ import { css } from "@emotion/css";
 import React from "react";
 import { PageInfo } from "../model/PageInfo";
 import { RecipePage } from "./RecipePage";
+import { Recipe, RecipeInfo } from "./RecipeInfo";
 
-export const RecipeMaker = () => {
+const recipeExample: Recipe = {
+  title: "Pancake",
+  description: "A simple pancake recipe",
+  ingredients: ["1 cup flour", "1 cup milk", "1 egg"],
+  instructions: [
+    "Mix all ingredients together",
+    "Pour onto a hot pan",
+    "Cook until golden brown",
+  ],
+  sauceInstructions: ["Mix all ingredients together", "Serve with pancakes"],
+  sideDishesReeccomendations: ["Bacon", "Eggs", "Sausage"],
+  category: "Breakfast",
+  typeOfCousine: "American",
+  caloriesPerServing: 200,
+  servings: 4,
+  prepTime: 10,
+};
+export const RecipeBook = () => {
   const mockPage: PageInfo[] = [
     {
       backgroundImg: "https://picsum.photos/id/301/1080/1920",
@@ -11,7 +29,7 @@ export const RecipeMaker = () => {
     },
     {
       pageNumber: 2,
-      component: () => <h1>Component 1</h1>,
+      component: () => <RecipeInfo pageInfo={recipeExample} />,
     },
     {
       backgroundImg: "https://picsum.photos/id/310/1080/1920",
@@ -57,35 +75,35 @@ export const RecipeMaker = () => {
       <RecipePage
         $backgroundImg={page.backgroundImg}
         $pageNumber={page.pageNumber}
-        $customColor={page.pageNumber % 2 === 0 ? "inherit" : "blue"}
-        {...page.pageNumber % 2 === 0 ? { 
-          whileHover: { 
-            translateX: -50,
-            boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
-            rotate: 1
-           },
-           transition: { 
-            ease: "easeOut",
-            duration: 0.5,
-           },
-           onClick: () => handlePageRangeIncrement(),
-         } : {
-          whileHover: { 
-            translateX: 50,
-            boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
-            rotate: -1
-           },
-           transition: { 
-            ease: "easeOut",
-            duration: 0.5,
-           },
-           onClick: () => handlePageRangeDecrement(),
-         }
-        }
+        $customColor={page.pageNumber % 2 === 0 ? "white" : "inherit"}
+        {...(page.pageNumber % 2 === 0
+          ? {
+              whileHover: {
+                translateX: -20,
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
+                rotate: 1,
+              },
+              transition: {
+                ease: "easeOut",
+                duration: 0.3,
+              },
+              onClick: () => handlePageRangeIncrement(),
+            }
+          : {
+              whileHover: {
+                translateX: 20,
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
+                rotate: -1,
+              },
+              transition: {
+                ease: "easeOut",
+                duration: 0.3,
+              },
+              onClick: () => handlePageRangeDecrement(),
+            })}
       >
         <p className="text">{page.pageNumber}</p>
         {page.component && <page.component />}
-       
       </RecipePage>
     );
   };
