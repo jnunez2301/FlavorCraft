@@ -72,6 +72,7 @@ export const RecipeBook = () => {
   };
   const Page = (page: PageInfo) => {
     return (
+      // @ts-expect-error: Property animated exist just an error while pageNumber is odd
       <RecipePage
         $backgroundImg={page.backgroundImg}
         $pageNumber={page.pageNumber}
@@ -82,22 +83,26 @@ export const RecipeBook = () => {
                 translateX: -20,
                 boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
                 rotate: 1,
-              },
-              transition: {
-                ease: "easeOut",
-                duration: 0.3,
+                transition: {
+                  ease: "easeOut",
+                  duration: 0.3,
+                }
               },
               onClick: () => handlePageRangeIncrement(),
+              animate: {
+                x: [-120, 0, -20],
+                duration: 2,
+              }
             }
           : {
               whileHover: {
                 translateX: 20,
                 boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
                 rotate: -1,
-              },
-              transition: {
-                ease: "easeOut",
-                duration: 0.3,
+                transition: {
+                  ease: "easeOut",
+                  duration: 0.5,
+                },
               },
               onClick: () => handlePageRangeDecrement(),
             })}
@@ -109,8 +114,6 @@ export const RecipeBook = () => {
   };
   return (
     <>
-      <button onClick={handlePageRangeDecrement}>Previous</button>
-      <button onClick={handlePageRangeIncrement}>Next</button>
       <div
         className={css(`
         display: flex;
