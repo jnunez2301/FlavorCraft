@@ -2,6 +2,7 @@ import { useForm, zodResolver } from "@mantine/form";
 import z from "zod";
 import Input from "../components/Input";
 import Form from "../components/Form";
+import { Link } from "@tanstack/react-router";
 
 const RegisterSchema = z
   .object({
@@ -99,6 +100,9 @@ export const Register = () => {
           {...form.getInputProps("confirmPassword")}
         />
       </div>
+      <p>
+        Already have an account? <Link to="/auth">sign in</Link>
+      </p>
       <button type="submit">Register</button>
     </Form>
   );

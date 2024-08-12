@@ -22,7 +22,7 @@ const rootRoute = createRootRoute({
     const navigate = useNavigate();
     useEffect(() => {
       const path = window.location.pathname;
-      if (path === "/auth") return;
+      if (path.split("/").includes("auth")) return;
       getApi("auth/profile")
         .then((response) => {
           if (response?.success) {
@@ -55,8 +55,9 @@ const authRoute = createRoute({
 });
 const loginRoute = createRoute({
   getParentRoute: () => authRoute,
-  path: "/login",
+  path: "/",
   component: () => <Login />,
+  
 });
 const registerRoute = createRoute({
   getParentRoute: () => authRoute,

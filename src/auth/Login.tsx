@@ -5,7 +5,7 @@ import Form from "../components/Form";
 import { useSession } from "./SessionContext";
 import { useResolveApi } from "../hooks/useResolveApi";
 import User from "../model/User";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 const LoginSchema = z.object({
   email: z
@@ -24,10 +24,10 @@ const LoginSchema = z.object({
     })
     .min(6, {
       message: "Password must be at least 6 characters long",
-    })
-    // .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/, {
-    //   message: "Password must contain at least one letter and one number",
-    // }),
+    }),
+  // .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/, {
+  //   message: "Password must contain at least one letter and one number",
+  // }),
 });
 
 export const Login = () => {
@@ -45,20 +45,20 @@ export const Login = () => {
   const navigate = useNavigate();
   const handleLogin = (values: typeof form.values) => {
     postApi("auth/login", values)
-    .then(response => {
-      if(response.success){
-        const currentUser = response.session as unknown as User;
-        navigate({
-          to: '/'
-        })
-        setUserSession(currentUser);
-        form.reset();
-      }
-    })
-    .catch(error => {
-      console.error("Error logging in", error);
-    });
-  }
+      .then((response) => {
+        if (response.success) {
+          const currentUser = response.session as unknown as User;
+          navigate({
+            to: "/",
+          });
+          setUserSession(currentUser);
+          form.reset();
+        }
+      })
+      .catch((error) => {
+        console.error("Error logging in", error);
+      });
+  };
   return (
     <Form onSubmit={form.onSubmit(handleLogin, zodValidationErrors)}>
       <div className="input-label">
@@ -81,6 +81,9 @@ export const Login = () => {
           {...form.getInputProps("password")}
         />
       </div>
+      <p>
+        Don't have an account? <Link to="/auth/register">register</Link>
+      </p>
       <button type="submit">Login</button>
     </Form>
   );
