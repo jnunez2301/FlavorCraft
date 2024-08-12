@@ -1,6 +1,7 @@
 import { useForm, zodResolver } from "@mantine/form";
 import z from "zod";
-import Input, { Form } from "../components/Input";
+import Input from "../components/Input";
+import Form from "../components/Form";
 import { useSession } from "./SessionContext";
 import { useResolveApi } from "../hooks/useResolveApi";
 import User from "../model/User";

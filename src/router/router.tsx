@@ -7,12 +7,13 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import { Home } from "../components/Home";
-import { Login } from "../auth/Login";
-import { Register } from "../auth/Register";
 import { useSession } from "../auth/SessionContext";
 import { useEffect } from "react";
 import { useResolveApi } from "../hooks/useResolveApi";
 import User from "../model/User";
+import { Authenticate } from "../auth/Authenticate";
+import { Login } from "../auth/Login";
+import { Register } from "../auth/Register";
 
 const rootRoute = createRootRoute({
   component: () => {
@@ -21,23 +22,23 @@ const rootRoute = createRootRoute({
     const navigate = useNavigate();
     useEffect(() => {
       const path = window.location.pathname;
-      if(path === "/login" || path === "/register") return;
+      if (path === "/auth") return;
       getApi("auth/profile")
-      .then(response => {
-        if(response?.success) {
-          const currentUser = response.session as unknown as User;
-          setUserSession(currentUser);
-        } else {
-          navigate({
-            to: "/login",
-          });
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching user profile", error);
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[userSession])
+        .then((response) => {
+          if (response?.success) {
+            const currentUser = response.session as unknown as User;
+            setUserSession(currentUser);
+          } else {
+            navigate({
+              to: "/auth",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user profile", error);
+        });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userSession]);
     return <Outlet />;
   },
 });
@@ -47,21 +48,24 @@ const indexRoute = createRoute({
   path: "/",
   component: () => <Home />,
 });
-const loginRoute = createRoute({
+const authRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "login",
+  path: "/auth",
+  component: () => <Authenticate />,
+});
+const loginRoute = createRoute({
+  getParentRoute: () => authRoute,
+  path: "/login",
   component: () => <Login />,
 });
 const registerRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "register",
+  getParentRoute: () => authRoute,
+  path: "/register",
   component: () => <Register />,
 });
-
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  loginRoute,
-  registerRoute,
+  authRoute.addChildren([loginRoute, registerRoute]),
 ]);
 
 const router = createRouter({ routeTree });
