@@ -3,6 +3,7 @@ import z from "zod";
 import Input from "../components/Input";
 import Form from "../components/Form";
 import { Link } from "@tanstack/react-router";
+import Button from "../components/Button";
 
 const RegisterSchema = z
   .object({
@@ -103,7 +104,7 @@ export const Register = () => {
       <p>
         Already have an account? <Link to="/auth">sign in</Link>
       </p>
-      <button type="submit">Register</button>
+      <Button type="submit">Register</Button>
     </Form>
   );
 };

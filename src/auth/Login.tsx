@@ -6,6 +6,7 @@ import { useSession } from "./SessionContext";
 import { useResolveApi } from "../hooks/useResolveApi";
 import User from "../model/User";
 import { Link, useNavigate } from "@tanstack/react-router";
+import Button from "../components/Button";
 
 const LoginSchema = z.object({
   email: z
@@ -84,7 +85,7 @@ export const Login = () => {
       <p>
         Don't have an account? <Link to="/auth/register">register</Link>
       </p>
-      <button type="submit">Login</button>
+      <Button type="submit">Login</Button>
     </Form>
   );
 };

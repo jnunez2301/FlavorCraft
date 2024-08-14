@@ -17,7 +17,7 @@ import { Register } from "../auth/Register";
 
 const rootRoute = createRootRoute({
   component: () => {
-    const { userSession, setUserSession } = useSession();
+    const { setUserSession } = useSession();
     const { getApi } = useResolveApi();
     const navigate = useNavigate();
     useEffect(() => {
@@ -38,7 +38,7 @@ const rootRoute = createRootRoute({
           console.error("Error fetching user profile", error);
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userSession]);
+    }, []);
     return <Outlet />;
   },
 });

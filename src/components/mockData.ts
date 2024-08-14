@@ -1,5 +1,5 @@
-import { PageInfo } from "../model/PageInfo";
-import { Recipe } from "./RecipeInfo";
+import { Recipe } from "../model/Recipe";
+
 const recipeExample: Recipe = {
   title: "Pancake",
   description: "A simple pancake recipe",
@@ -16,6 +16,7 @@ const recipeExample: Recipe = {
   caloriesPerServing: 200,
   servings: 4,
   prepTime: 10,
+  backgroundImg: "",
 };
 const recipeExample2: Recipe = {
   title: "Tteokbokki",
@@ -81,34 +82,4 @@ const ramenExample: Recipe = {
   ],
   sideDishesReeccomendations: ["Gyoza", "Tempura", "Sushi"],
 };
-export const mockPage: PageInfo[] = [
-  {
-    backgroundImg: "https://picsum.photos/id/301/1080/1920",
-    pageNumber: 1,
-  },
-  {
-    pageNumber: 2,
-    recipeDetail: recipeExample,
-  },
-  {
-    backgroundImg: "https://picsum.photos/id/310/1080/1920",
-    pageNumber: 3,
-  },
-  {
-    pageNumber: 4,
-    recipeDetail: recipeExample2,
-  },
-  {
-    backgroundImg:
-      "https://sabor.eluniverso.com/wp-content/uploads/2023/12/IMG_0836-1024x768.jpeg",
-    pageNumber: 5,
-  },
-  {
-    pageNumber: 6,
-    recipeDetail: ramenExample,
-  },
-  {
-    backgroundImg: "https://picsum.photos/id/307/1080/1920",
-    pageNumber: 7,
-  },
-];
+export const mockPage: Recipe[] = [ramenExample, recipeExample, recipeExample2];
