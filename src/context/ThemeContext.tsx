@@ -52,8 +52,6 @@ export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setTheme,
   };
 
-  console.log(theme);
-
   return (
     <ThemeContext.Provider value={values}>
       <Theme $themeMode={theme}>{children}</Theme>
