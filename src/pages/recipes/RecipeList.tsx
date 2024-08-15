@@ -13,13 +13,11 @@ const RecipeSection = styled.section`
   cursor: pointer;
 `;
 
-const RecipeList = ({ recipes }: { recipes: Recipe[] }) => {
+const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
   const navigate = useNavigate();
   return (
     <RecipeSection>
-      {recipes &&
-        recipes.length > 0 &&
-        recipes.map((recipe) => (
+      {recipes.map((recipe) => (
           <article
             key={recipe._id}
             className={css({
@@ -40,7 +38,7 @@ const RecipeList = ({ recipes }: { recipes: Recipe[] }) => {
             })}
             onClick={() => {
               navigate({
-                to: `/recipe/${recipe._id}`,
+                to: `/${recipe._id}`,
               })
             }}
           >

@@ -14,6 +14,7 @@ import User from "../model/User";
 import { Authenticate } from "../auth/Authenticate";
 import { Login } from "../auth/Login";
 import { Register } from "../auth/Register";
+import RecipeById from "../pages/recipes/RecipeById";
 
 const rootRoute = createRootRoute({
   component: () => {
@@ -64,9 +65,15 @@ const registerRoute = createRoute({
   path: "/register",
   component: () => <Register />,
 });
+const recipeRouteById = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/$recipeId",
+  component: () => <RecipeById/>,
+});
 const routeTree = rootRoute.addChildren([
   indexRoute,
   authRoute.addChildren([loginRoute, registerRoute]),
+  recipeRouteById
 ]);
 
 const router = createRouter({ routeTree });

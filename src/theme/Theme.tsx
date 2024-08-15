@@ -41,23 +41,7 @@ const Theme = styled.div<{ $themeMode: ThemeType }>`
 
   color: var(--text-color);
   height: 100%;
-
-  button {
-    background-color: var(--info-color);
-    color: var(--text-color);
-    &:hover {
-      background-color: var(--info-color-hover);
-    }
-  }
-
-  input {
-    border: 1px solid var(--info-color);
-    transition: border 0.2s ease-in;
-    &:focus {
-      border: 2px solid var(--info-color-hover);
-    }
-  }
-
+  
   a {
     color: var(--info-color);
     transition: color 0.2s ease-in;
