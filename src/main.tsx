@@ -4,13 +4,16 @@ import "./index.css";
 import { RouterProvider } from "@tanstack/react-router";
 import router from "./router/router.tsx";
 import { Toaster } from "react-hot-toast";
-import { SessionProvider, } from "./auth/SessionContext.tsx";
+import { SessionProvider } from "./auth/SessionContext.tsx";
+import { ThemeProvider } from "./context/ThemeContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <SessionProvider>
-      <RouterProvider router={router}/>
-      <Toaster position="top-center" />
+      <ThemeProvider>
+        <RouterProvider router={router} />
+        <Toaster position="top-center" />
+      </ThemeProvider>
     </SessionProvider>
   </StrictMode>
 );

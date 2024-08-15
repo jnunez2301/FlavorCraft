@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 
 const Button = styled.button`
-  background-color: blueviolet;
   color: #fff;
   padding: 10px 20px;
   border-radius: 5px;
@@ -9,9 +8,7 @@ const Button = styled.button`
   cursor: pointer;
   font-weight: bold;
   font-size: 16px;
-  &:hover {
-    background-color: darkviolet;
-  }
+  transition: all 0.2s ease;
 `;
 
 export default Button;

@@ -5,9 +5,28 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* 
+#0D1B2A
+#1B263B 
+#415A77
+#778DA9 
+#E0E1DD
+*/
+:root {
+  /* Light */
+  --color-primary: #1B263B;
+  --color-secondary: #415A77;
+  --color-tertiary: #778DA9;
+  --color-quaternary: #E0E1DD;
+  --color-quinary: #0D1B2A;
+
+}
 body {
   font-family: "Noto Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
   font-variation-settings: "wdth" 100;
+}
+a {
+  text-decoration: none;
 }
