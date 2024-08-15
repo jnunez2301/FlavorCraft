@@ -1,6 +1,6 @@
 
 export const RecipeBook = () => {
   return (
-    <div>RecipeBook</div>
+  <div>RecipeBook</div>
   )
 }

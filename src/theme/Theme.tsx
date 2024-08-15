@@ -1,7 +1,8 @@
+/** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { ThemeType } from "../context/ThemeContext";
 
-const Theme = styled.section<{ $themeMode: ThemeType }>`
+const Theme = styled.div<{ $themeMode: ThemeType }>`
   --bg-color: ${({ $themeMode }) =>
     $themeMode === ThemeType.Dark
       ? "var(--color-primary)"
@@ -22,8 +23,10 @@ const Theme = styled.section<{ $themeMode: ThemeType }>`
     $themeMode === ThemeType.Dark
       ? "var(--color-quaternary)"
       : "var(--color-primary)"};
+
   background-color: var(--bg-color);
   color: var(--text-color);
+  height: 100%;
   button {
     background-color: var(--info-color);
     color: var(--text-color);
