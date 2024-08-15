@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { RecipeBook } from "./RecipeBook";
+import RecipeBook from "../pages/recipes/RecipeBook";
 
 export const Home = () => {
   

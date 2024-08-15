@@ -1,4 +1,4 @@
-import { Recipe } from "../model/Recipe";
+import { Recipe } from "./model/Recipe";
 
 const recipeExample: Recipe = {
   title: "Pancake",
