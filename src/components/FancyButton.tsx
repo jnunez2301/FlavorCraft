@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 const FancyButton = styled.div<{$rounded?: boolean}>`
   display: flex;
   align-items: center;
+  background-color: var(--bg-color);
   gap: 0.3rem;
   padding: 0.7rem;
   cursor: pointer;

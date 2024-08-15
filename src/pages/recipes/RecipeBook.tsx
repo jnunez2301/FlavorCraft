@@ -25,7 +25,9 @@ const RecipeBook = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSession]);
   return (
-    <section>
+    <section style={{
+      backgroundColor: "var(--bg-color)",
+    }}>
       <header>
         <h1
           style={{

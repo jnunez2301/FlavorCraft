@@ -37,7 +37,7 @@ export const Home = () => {
   return (
     <section
       style={{
-        backgroundColor: "var(--bg-color)",
+        
         padding: "1.3rem",
       }}
     >
