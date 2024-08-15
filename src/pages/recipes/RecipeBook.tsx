@@ -3,10 +3,13 @@ import { Recipe } from "../../model/Recipe";
 import { useResolveApi } from "../../hooks/useResolveApi";
 import { useSession } from "../../auth/SessionContext";
 import RecipeList from "./RecipeList";
+import AddRecipe from "./AddRecipe";
+import { useNavigate } from "@tanstack/react-router";
 
 const RecipeBook = () => {
   const { getApi } = useResolveApi();
   const { userSession } = useSession();
+  const navigate = useNavigate();
   const [recipeList, setRecipeList] = useState<Recipe[] | null>([]);
 
   useEffect(() => {
@@ -42,6 +45,18 @@ const RecipeBook = () => {
         </p>
         <hr />
       </header>
+      <nav
+        style={{
+          display: "flex",
+          margin: "1rem 0",
+        }}
+      >
+        <AddRecipe onClick={() => {
+          navigate({
+            to: "/editor",
+          });
+        }}/>
+      </nav>
       {recipeList && <RecipeList recipes={recipeList} />}
     </section>
   );

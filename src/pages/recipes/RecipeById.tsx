@@ -7,7 +7,21 @@ import type { Recipe } from "../../model/Recipe";
 import Loader from "../../components/Loader";
 
 const Recipe = ({ currentRecipe }: { currentRecipe: Recipe }) => {
-  return <p>{JSON.stringify(currentRecipe)}</p>;
+  return (
+    <article>
+      <h1>{currentRecipe.title}</h1>
+      <p>{currentRecipe.description}</p>
+      <p>{currentRecipe.ingredients}</p>
+      <p>{currentRecipe.instructions}</p>
+      {currentRecipe.sauceInstructions && (
+        <ul>
+          {currentRecipe.sauceInstructions.map((sauce, index) => (
+            <li key={index}>{sauce}</li>
+          ))}
+        </ul>
+      )}
+    </article>
+  );
 };
 
 const RecipeById = () => {
@@ -35,6 +49,7 @@ const RecipeById = () => {
       style={{
         display: "flex",
         flexDirection: "column",
+        padding: "1rem",
       }}
     >
       <Back />
