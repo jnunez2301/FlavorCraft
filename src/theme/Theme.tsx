@@ -6,6 +6,10 @@ const Theme = styled.div<{ $themeMode: ThemeType }>`
     $themeMode === ThemeType.Dark
       ? "var(--color-primary)"
       : "var(--color-quaternary)"};
+  --accent-color: ${({ $themeMode }) =>
+    $themeMode === ThemeType.Dark
+      ? "var(--color-tertiary)"
+      : "var(--color-secondary)"};
   --text-color: ${({ $themeMode }) =>
     $themeMode === ThemeType.Dark
       ? "var(--color-quaternary)"
@@ -29,7 +33,10 @@ const Theme = styled.div<{ $themeMode: ThemeType }>`
   --dot-spacing: 70px; /* Adjust the spacing between dots */
 
   background-color: var(--bg-color);
-  background-image: radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size));
+  background-image: radial-gradient(
+    var(--dot-color) var(--dot-size),
+    transparent var(--dot-size)
+  );
   background-size: var(--dot-spacing) var(--dot-spacing);
 
   color: var(--text-color);

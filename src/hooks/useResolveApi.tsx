@@ -6,6 +6,12 @@ import { useSession } from "../auth/SessionContext";
 
 export const useResolveApi = () => {
   const { clearUserSession } = useSession();
+  /**
+   * Get data from the API with credentials
+   * You don't need to pass the full URL, just the endpoint
+   * e.g. getApi("recipes")
+   * @param endpoint The endpoint to fetch from the API
+   *  */ 
   async function getApi(endpoint: string) {
     try {
       const response = await fetch(`${apiUrl}${endpoint}`, {
@@ -30,6 +36,13 @@ export const useResolveApi = () => {
       return;
     }
   }
+  /**
+   * Post data to the API with credentials
+   * You don't need to pass the full URL, just the endpoint
+   * e.g. postApi("recipes", {title: "Recipe title"})
+   * @param endpoint The endpoint to post to the API
+   * @param data The data to send to the API
+  */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function postApi(endpoint: string, data: any) {
     try {

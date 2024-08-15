@@ -9,15 +9,15 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import Button from "../components/Button";
 
 const LoginSchema = z.object({
-  email: z
+  nickname: z
     .string({
       message: "Username is required",
     })
-    .email({
-      message: "Username must be a valid email address",
-    })
     .min(3, {
       message: "Username must be at least 3 characters long",
+    })
+    .max(255, {
+      message: "Username must be less than 255 characters long",
     }),
   password: z
     .string({
@@ -33,7 +33,7 @@ const LoginSchema = z.object({
 
 export const Login = () => {
   const initialValues = {
-    email: "",
+    nickname: "",
     password: "",
   };
   const form = useForm({
@@ -67,15 +67,15 @@ export const Login = () => {
         <Input
           type="text"
           id="username"
-          placeholder="Write your username or email"
+          placeholder="Username or email"
           name="username"
-          {...form.getInputProps("email")}
+          {...form.getInputProps("nickname")}
         />
       </div>
       <div className="input-label">
         <label htmlFor="password">Password</label>
         <Input
-          placeholder="Write your password"
+          placeholder="Your password"
           type="password"
           id="password"
           name="password"
