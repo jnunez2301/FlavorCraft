@@ -2,8 +2,9 @@ import { useForm, zodResolver } from "@mantine/form";
 import z from "zod";
 import Input from "../components/Input";
 import Form from "../components/Form";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import Button from "../components/Button";
+import { useResolveApi } from "../hooks/useResolveApi";
 
 const RegisterSchema = z
   .object({
@@ -59,8 +60,22 @@ export const Register = () => {
     validate: zodResolver(RegisterSchema),
     initialValues,
   });
+  const { postApi, zodValidationErrors } = useResolveApi();
+  const navigate = useNavigate();
+  const onSubmit = (values: typeof initialValues) => {
+    postApi("auth/register", values)
+      .then((response) => {
+        if (response?.success) {
+          navigate({
+            to: "/auth",
+          });
+          form.reset();
+        }
+      })
+      .catch((err) => console.error(err));
+  };
   return (
-    <Form>
+    <Form onSubmit={form.onSubmit(onSubmit, zodValidationErrors)}>
       <div className="input-label">
         <label htmlFor="username">Username</label>
         <Input

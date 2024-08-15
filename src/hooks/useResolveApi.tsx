@@ -9,8 +9,8 @@ export const useResolveApi = () => {
   /**
    * Get data from the API with credentials
    * You don't need to pass the full URL, just the endpoint
-   * e.g. getApi("recipes")
    * @param endpoint The endpoint to fetch from the API
+   * @example getApi("recipes")
    *  */ 
   async function getApi(endpoint: string) {
     try {
@@ -25,6 +25,7 @@ export const useResolveApi = () => {
         let errorMessage = "There was an error trying to reach the server";
         if(data.message.toLowerCase().split(" ").includes("token")) errorMessage = "You must be logged in to access this page";
         toast.error(errorMessage,{id: "api-error",});
+       
         return;
       }
       return data;
@@ -39,7 +40,7 @@ export const useResolveApi = () => {
   /**
    * Post data to the API with credentials
    * You don't need to pass the full URL, just the endpoint
-   * e.g. postApi("recipes", {title: "Recipe title"})
+   * @example postApi("recipes", {title: "Recipe title"})
    * @param endpoint The endpoint to post to the API
    * @param data The data to send to the API
   */
@@ -71,6 +72,11 @@ export const useResolveApi = () => {
       throw err;
     }
   }
+  /**
+   * Handle Zod validation errors
+   * @param errors The errors object from Zod
+   * @example zodValidationErrors(errors)
+    */
   function zodValidationErrors(errors: FormErrors) {
     const zodErrors = Object.values(errors);
     console.log(errors);

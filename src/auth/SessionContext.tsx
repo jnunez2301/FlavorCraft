@@ -22,7 +22,10 @@ export const useSession = () => {
 
 export const SessionProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [userSession, setUserSession] = React.useState<User | null>(null);
-  const clearUserSession = () => setUserSession(null);
+  const clearUserSession = () => {
+    window.location.href = "/auth";
+    setUserSession(null)
+  };
   const values = {
     userSession,
     setUserSession,

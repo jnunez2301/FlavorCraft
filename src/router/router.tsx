@@ -6,7 +6,7 @@ import {
   createRootRoute,
   useNavigate,
 } from "@tanstack/react-router";
-import { Home } from "../components/Home";
+import { Home } from "../pages/Home";
 import { useSession } from "../auth/SessionContext";
 import { useEffect } from "react";
 import { useResolveApi } from "../hooks/useResolveApi";

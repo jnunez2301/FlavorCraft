@@ -2,6 +2,7 @@ import { css } from "@emotion/css";
 import { Recipe } from "../../model/Recipe";
 import styled from "@emotion/styled";
 import { useNavigate } from "@tanstack/react-router";
+import Loader from "../../components/Loader";
 
 const RecipeSection = styled.section`
   display: grid;
@@ -15,6 +16,12 @@ const RecipeSection = styled.section`
 
 const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
   const navigate = useNavigate();
+  if (!recipes) {
+    return <Loader />;
+  }
+  if(recipes.length === 0) {
+    return <p>No recipes found</p>
+  }
   return (
     <RecipeSection>
       {recipes.map((recipe) => (

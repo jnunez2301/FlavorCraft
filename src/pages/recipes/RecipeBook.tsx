@@ -3,12 +3,12 @@ import { Recipe } from "../../model/Recipe";
 import { useResolveApi } from "../../hooks/useResolveApi";
 import { useSession } from "../../auth/SessionContext";
 import RecipeList from "./RecipeList";
-import Loader from "../../components/Loader";
 
 const RecipeBook = () => {
   const { getApi } = useResolveApi();
   const { userSession } = useSession();
-  const [recipeList, setRecipeList] = useState<Recipe[]>([]);
+  const [recipeList, setRecipeList] = useState<Recipe[] | null>([]);
+
   useEffect(() => {
     if (userSession) {
       getApi(`recipes/${userSession._id}`)
@@ -21,7 +21,6 @@ const RecipeBook = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSession]);
-
   return (
     <section>
       <header>
@@ -43,18 +42,7 @@ const RecipeBook = () => {
         </p>
         <hr />
       </header>
-      {recipeList && recipeList.length > 0 ? (
-        <RecipeList recipes={recipeList} />
-      ) : (
-        <div style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "50vh",
-        }}>
-          <Loader />
-        </div>
-      )}
+      {recipeList && <RecipeList recipes={recipeList} />}
     </section>
   );
 };
