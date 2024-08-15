@@ -12,7 +12,7 @@
   --color-tertiary: #778DA9;
   --color-quaternary: #E0E1DD;
   --color-quinary: #0D1B2A;
-
+  --color-danger: #E63946;
 }
 html,body {
   font-family: "Noto Sans", sans-serif;

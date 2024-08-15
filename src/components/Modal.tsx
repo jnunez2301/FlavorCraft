@@ -1,16 +1,7 @@
 import React from "react";
-import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 
 // Define the fade-in animation keyframes
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
 
 // Define the modal styles
 const ModalStyles = styled.div`
@@ -18,7 +9,7 @@ const ModalStyles = styled.div`
 
   display: flex; /* Visible by default (for demonstration, adjust accordingly) */
   position: fixed;
-  z-index: 1;
+  z-index: 10000;
   left: 0;
   top: 0;
   width: 100%;
@@ -27,17 +18,15 @@ const ModalStyles = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
   align-items: center; /* Center content vertically */
   justify-content: center; /* Center content horizontally */
-  animation: ${fadeIn} 0.3s ease-in;
 
   /* Modal Content/Box */
   .modal-content {
-    background-color: #fefefe;
+    background-color: var(--bg-color);
     padding: 20px;
-    border: 1px solid #888;
+    border: 1px solid var(--info-color);
     width: 80%;
     max-width: 500px; /* Limit the width */
     border-radius: 10px; /* Add some border radius for better aesthetics */
-    animation: ${fadeIn} 0.3s ease-in-out;
   }
 
   /* The Close Button */

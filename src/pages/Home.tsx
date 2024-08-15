@@ -6,25 +6,34 @@ import { useState } from "react";
 import { useSession } from "../auth/SessionContext";
 import { IconDoorExit } from "@tabler/icons-react";
 import { useResolveApi } from "../hooks/useResolveApi";
+import Modal from "../components/Modal";
+import Button from "../components/Button";
 
 export const Home = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const { clearUserSession } = useSession();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { clearUserSession, userSession } = useSession();
   const { getApi } = useResolveApi();
 
   const handleMenu = () => {
     setShowMenu(!showMenu);
-  }
+  };
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   const handleLogout = () => {
     getApi("auth/logout")
-    .then(response => {
-      if(response?.success){
-        clearUserSession();
-      }
-    })
-    .catch(err => console.error(err));
-  }
-  
+      .then((response) => {
+        if (response?.success) {
+          clearUserSession();
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
   return (
     <section
       style={{
@@ -38,17 +47,33 @@ export const Home = () => {
           justifyContent: "flex-end",
         })}
       >
-        <Avatar avatarImg="" fallback="Jhonata Núñez" onClick={handleMenu} />
+        {userSession && (
+          <Avatar
+            avatarImg={userSession?.profilePicture}
+            fallback={userSession.username}
+            onClick={handleMenu}
+          />
+        )}
         <Menu showMenu={showMenu}>
-          <MenuOption>Menu</MenuOption>
-          <MenuOption>Option 1</MenuOption>
-          <MenuOption >
+          <MenuOption>
             <IconDoorExit size={20} />
-            <span onClick={() => handleLogout()}>Logout</span>
+            <span onClick={() => handleOpenModal()}>Logout</span>
           </MenuOption>
         </Menu>
       </div>
       <RecipeBook />
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <h2>Do you want to log out?</h2>
+        <div style={{
+          display: "flex",
+          gap: "1rem",
+          justifyContent: "center",
+          marginTop: "3rem",
+        }}>
+          <Button $variant="danger" onClick={handleLogout}>Yes</Button>
+          <Button onClick={handleCloseModal}>No</Button>
+        </div>
+      </Modal>
     </section>
   );
 };

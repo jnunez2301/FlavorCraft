@@ -41,7 +41,7 @@ const Theme = styled.div<{ $themeMode: ThemeType }>`
 
   color: var(--text-color);
   height: 100%;
-  
+
   a {
     color: var(--info-color);
     transition: color 0.2s ease-in;
