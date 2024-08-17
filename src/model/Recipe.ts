@@ -4,13 +4,13 @@ export type Recipe = {
   title: string;
   description: string;
   category: string;
-  typeOfCousine: string;
+  typeOfCuisine: string;
   caloriesPerServing: number;
   servings: number;
   prepTime: number;
   ingredients: string[];
   sauceInstructions?: string[];
   instructions: string[];
-  sideDishesReeccomendations?: string[];
+  sideDishesRecommendations?: string[];
   backgroundImg?: string;
 };

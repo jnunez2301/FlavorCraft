@@ -41,7 +41,7 @@ const RecipeSchema = z.object({
       message: "Category is required",
     })
     .min(3, { message: "Category must be at least 3 characters long" }),
-  typeOfCousine: z
+  typeOfCuisine: z
     .string({
       message: "Type of cousine is required",
     })
@@ -83,7 +83,7 @@ const RecipeSchema = z.object({
       })
     )
     .min(1, { message: "Instructions must be at least 1" }),
-  sideDishesReeccomendations: z
+  sideDishesRecommendations: z
     .array(
       z.string({
         message: "Side dishes recommendations is required",
@@ -102,14 +102,14 @@ const NewRecipe = ({ userId }: { userId: string }) => {
     title: "",
     description: "",
     category: "",
-    typeOfCousine: "",
+    typeOfCuisine: "",
     caloriesPerServing: 0,
     servings: 0,
     prepTime: 0,
     ingredients: [],
     sauceInstructions: [],
     instructions: [],
-    sideDishesReeccomendations: [],
+    sideDishesRecommendations: [],
     backgroundImg: "",
   };
   const form = useForm({
@@ -199,7 +199,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
     if (currentSideDish) {
       setSideDishes((prev) => {
         const newList = prev.concat(currentSideDish);
-        form.setFieldValue("sideDishesReeccomendations", newList);
+        form.setFieldValue("sideDishesRecommendations", newList);
         return newList;
       });
       setCurrentSideDish("");
@@ -208,7 +208,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
   const handleRemoveSideDish = (index: number) => {
     setSideDishes((prev) => {
       const newList = prev.filter((_, i) => i !== index);
-      form.setFieldValue("sideDishesReeccomendations", newList);
+      form.setFieldValue("sideDishesRecommendations", newList);
       return newList;
     });
   };
@@ -599,7 +599,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
                 <InvisibleInput
                   placeholder="Korean, Mexican, etc."
                   $size="medium"
-                  {...form.getInputProps("typeOfCousine")}
+                  {...form.getInputProps("typeOfCuisine")}
                   required
                 />
               </div>

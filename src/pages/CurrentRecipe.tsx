@@ -5,13 +5,20 @@ type CurrentRecipeProps = {
 };
 
 const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
-  console.log(currentRecipe);
   return (
     <section id="current-recipe">
-      <h1>{currentRecipe.title}</h1>
+      <h2>Title</h2>
+      <h2>{currentRecipe.title}</h2>
+      <h2>Description</h2>
       <p>{currentRecipe.description}</p>
+      <h2>Ingredients</h2>
       <p>{currentRecipe.ingredients}</p>
-      <p>{currentRecipe.instructions}</p>
+      <h2>Instructions</h2>
+      <ul>
+        {currentRecipe.instructions.map((instruction, index) => (
+          <li key={index}>{instruction}</li>
+        ))}
+      </ul>
       {currentRecipe.sauceInstructions && (
         <ul>
           {currentRecipe.sauceInstructions.map((sauce, index) => (
