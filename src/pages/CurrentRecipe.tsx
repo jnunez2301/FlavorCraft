@@ -16,16 +16,16 @@ const RecipeContainer = styled.section`
   border: 1px solid var(--theme-white);
   padding: 1rem;
   min-height: 80vh;
-  min-width: 50vw;
+  min-width: 60vw;
+  width: fit-content;
   position: relative;
 `;
 
 const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
   return (
     <RecipeContainer id="current-recipe">
-      <h2>Title</h2>
       <h2>{currentRecipe.title}</h2>
-      <h2>Description</h2>
+      <p>{currentRecipe.description}</p>
       <img
         src={currentRecipe.backgroundImg}
         alt={`Image of ${currentRecipe.title}`}
@@ -53,7 +53,6 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
         <Badge>{currentRecipe.servings} servings</Badge>
         <Badge>{currentRecipe.prepTime} min</Badge>
       </div>
-      <p>{currentRecipe.description}</p>
       <h2>Ingredients</h2>
       <ul>
         {currentRecipe.ingredients.map((instruction, index) => (

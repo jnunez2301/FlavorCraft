@@ -1,4 +1,4 @@
-import { useParams } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import Back from "../../components/Back";
 import { useResolveApi } from "../../hooks/useResolveApi";
 import { useEffect, useState } from "react";
@@ -16,6 +16,7 @@ const RecipeById = () => {
   const { getApi } = useResolveApi();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const { userSession } = useSession();
+  const navigate = useNavigate();
   useEffect(() => {
     if (userSession) {
       getApi(`recipes/${recipeId}/user/${userSession._id}`)
@@ -56,7 +57,11 @@ const RecipeById = () => {
           display: "flex",
           gap: "1rem",
         }}>
-          <FancyButton>
+          <FancyButton onClick={() => {
+            navigate({
+              to: `/editor/${recipeId}`,
+            });
+          }}>
             <IconEdit size={20} />
             Edit
           </FancyButton>

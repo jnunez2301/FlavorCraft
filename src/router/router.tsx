@@ -16,6 +16,7 @@ import { Login } from "../auth/Login";
 import { Register } from "../auth/Register";
 import RecipeById from "../pages/recipes/RecipeById";
 import RecipeEditor from "../pages/editor/RecipeEditor";
+import RecipeEditorById from "../pages/editor/RecipeEditorById";
 
 const rootRoute = createRootRoute({
   component: () => {
@@ -59,7 +60,6 @@ const loginRoute = createRoute({
   getParentRoute: () => authRoute,
   path: "/",
   component: () => <Login />,
-  
 });
 const registerRoute = createRoute({
   getParentRoute: () => authRoute,
@@ -69,18 +69,25 @@ const registerRoute = createRoute({
 const recipeRouteById = createRoute({
   getParentRoute: () => rootRoute,
   path: "/$recipeId",
-  component: () => <RecipeById/>,
+  component: () => <RecipeById />,
 });
 const recipeEditRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/editor",
   component: () => <RecipeEditor />,
 });
+const recipeEditorByIdRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/editor/$recipeId",
+  component: () => <RecipeEditorById />,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   authRoute.addChildren([loginRoute, registerRoute]),
   recipeRouteById,
-  recipeEditRoute
+  recipeEditRoute,
+  recipeEditorByIdRoute,
 ]);
 
 const router = createRouter({ routeTree });

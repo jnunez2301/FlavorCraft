@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FormErrors } from "@mantine/form";
 import toast from "react-hot-toast";
 import { apiUrl } from "../util/enviroment";
@@ -44,11 +45,37 @@ export const useResolveApi = () => {
    * @param endpoint The endpoint to post to the API
    * @param data The data to send to the API
   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function postApi(endpoint: string, data: any) {
     try {
       const response = await fetch(`${apiUrl}${endpoint}`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+      const responseData: ApiResponse = await response.json();
+      if (!response.ok) {
+        if (response.status === 401) clearUserSession();
+        toast.error(responseData.message);
+      }
+      if (responseData.success) {
+        toast.success(responseData.message);
+      }
+      return responseData;
+    } catch (err) {
+      console.error("Fetch error: ", err);
+      toast.error("Error del servidor", {
+        id: "server-error",
+      });
+      throw err;
+    }
+  }
+  async function updateApi(endpoint: string, data: any) {
+    try {
+      const response = await fetch(`${apiUrl}${endpoint}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -91,6 +118,7 @@ export const useResolveApi = () => {
   return {
     getApi,
     postApi,
+    updateApi,
     zodValidationErrors,
   };
 };

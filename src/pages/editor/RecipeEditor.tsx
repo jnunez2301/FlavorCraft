@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 import { useResolveApi } from "../../hooks/useResolveApi";
@@ -9,6 +10,7 @@ import FancyButton from "../../components/FancyButton";
 import {
   IconBinocularsFilled,
   IconCategory,
+  IconCircuitSwitchClosed,
   IconDeviceFloppy,
   IconDumpling,
   IconFlame,
@@ -96,8 +98,16 @@ const RecipeSchema = z.object({
     })
     .optional(),
 });
-const NewRecipe = ({ userId }: { userId: string }) => {
-  const initialValues: Recipe = {
+const NewRecipe = ({
+  userId,
+  recipeId,
+}: {
+  userId: string;
+  recipeId?: string | null;
+}) => {
+  const { getApi, postApi, updateApi, zodValidationErrors } = useResolveApi();
+
+  const [initialValues, setInitialValues] = useState<Recipe>({
     userId: userId,
     title: "",
     description: "",
@@ -111,38 +121,72 @@ const NewRecipe = ({ userId }: { userId: string }) => {
     instructions: [],
     sideDishesRecommendations: [],
     backgroundImg: "",
-  };
+  });
   const form = useForm({
     mode: "controlled",
     validate: zodResolver(RecipeSchema),
     initialValues,
   });
-  const { postApi, zodValidationErrors } = useResolveApi();
+
+  useEffect(() => {
+    if (recipeId) {
+      getApi(`recipes/${recipeId}/user/${userId}`)
+        .then((response) => {
+          if (response?.success) {
+            setInitialValues(response.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching recipe", error);
+        });
+    }
+  }, [recipeId, userId]);
+  useEffect(() => {
+    form.setValues(initialValues);
+    setInstructions(initialValues.instructions || []);
+    setIngredients(initialValues.ingredients || []);
+    setSideDishes(initialValues.sideDishesRecommendations || []);
+    setSauceInstructions(initialValues.sauceInstructions || []);
+  }, [initialValues]);
   const [instructions, setInstructions] = useState<string[]>([]);
   const [currentInstruction, setCurrentInstruction] = useState<string>("");
   const [currentIngredient, setCurrentIngredient] = useState<string>("");
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [currentSideDish, setCurrentSideDish] = useState<string>("");
   const [sideDishes, setSideDishes] = useState<string[]>([]);
+  const [backgroundImageName, setBackgroundImageName] = useState<string>("");
   const [currentSauceInstruction, setCurrentSauceInstruction] =
     useState<string>("");
   const [sauceInstructions, setSauceInstructions] = useState<string[]>([]);
   const [currentRecipe, setCurrentRecipe] = useState<Recipe>(initialValues);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const handleSubmit = (values: typeof initialValues) => {
-    postApi("recipes", values)
-      .then((response) => {
-        if (response?.success) {
-          form.reset();
-          setInstructions([]);
-          setIngredients([]);
-          setSideDishes([]);
-          setSauceInstructions([]);
-        }
-      })
-      .catch((error) => {
-        console.error("Error adding recipe", error);
-      });
+    console.log("Form values", values);
+    if (recipeId) {
+      updateApi(`recipes/${recipeId}/user/${userId}`, values)
+        .then((response) => {
+          if (response?.success) {
+            console.log("Recipe updated", response.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating recipe", error);
+        });
+    } else {
+      postApi("recipes", values)
+        .then((response) => {
+          if (response?.success) {
+            form.reset();
+            setInstructions([]);
+            setIngredients([]);
+            setSideDishes([]);
+            setSauceInstructions([]);
+          }
+        })
+        .catch((error) => {
+          console.error("Error adding recipe", error);
+        });
+    }
   };
   const handleAddInstruction = () => {
     if (currentInstruction) {
@@ -212,6 +256,13 @@ const NewRecipe = ({ userId }: { userId: string }) => {
       return newList;
     });
   };
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setBackgroundImageName(file.name);
+      form.setFieldValue("backgroundImg", file.name); // Store file name or handle file upload accordingly
+    }
+  };
   useEffect(() => {
     const currentRecipe = form.getValues();
     setCurrentRecipe(currentRecipe);
@@ -258,8 +309,17 @@ const NewRecipe = ({ userId }: { userId: string }) => {
             }}
           >
             <FancyButton onClick={handlePreview}>
-              <IconBinocularsFilled size={iconSize} />
-              <h4>Preview</h4>
+              {isPreview ? (
+                <>
+                  <IconCircuitSwitchClosed size={iconSize}/>
+                  <h4>Hide</h4>
+                </>
+              ) : (
+                <>
+                  <IconBinocularsFilled size={iconSize} />
+                  <h4>Preview</h4>
+                </>
+              )}
             </FancyButton>
             <FancyButton
               as={"button"}
@@ -301,10 +361,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
               $size="medium"
               type="number"
               min={1}
-              onChange={(event) => {
-                const value = parseInt(event.target.value);
-                form.setFieldValue("prepTime", value);
-              }}
+              {...form.getInputProps("prepTime")}
             />
             <p>Minutes</p>
           </div>
@@ -612,10 +669,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
                   placeholder="Calories per serving"
                   $size="medium"
                   type="number"
-                  onChange={(event) => {
-                    const value = parseInt(event.target.value);
-                    form.setFieldValue("caloriesPerServing", value);
-                  }}
+                  {...form.getInputProps("caloriesPerServing")}
                 />
               </div>
             </div>
@@ -627,10 +681,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
                   placeholder="Servings"
                   $size="medium"
                   type="number"
-                  onChange={(event) => {
-                    const value = parseInt(event.target.value);
-                    form.setFieldValue("servings", value);
-                  }}
+                  {...form.getInputProps("servings")}
                   required
                 />
               </div>
@@ -641,8 +692,9 @@ const NewRecipe = ({ userId }: { userId: string }) => {
             type="file"
             $size="medium"
             accept="image/*"
-            {...form.getInputProps("backgroundImg")}
+            onChange={handleFileChange} // Set file name on change
           />
+          {backgroundImageName && <p>Selected file: {backgroundImageName}</p>}
         </div>
       </form>
       {isPreview && currentRecipe ? (
@@ -652,9 +704,13 @@ const NewRecipe = ({ userId }: { userId: string }) => {
   );
 };
 
-const RecipeEditor = () => {
+const RecipeEditor = ({ recipeId }: { recipeId?: string }) => {
   const { userSession } = useSession();
-  return userSession ? <NewRecipe userId={userSession._id} /> : <Loader />;
+  return userSession ? (
+    <NewRecipe recipeId={recipeId} userId={userSession._id} />
+  ) : (
+    <Loader />
+  );
 };
 
 export default RecipeEditor;
