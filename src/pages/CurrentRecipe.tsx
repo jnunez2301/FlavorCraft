@@ -5,8 +5,9 @@ type CurrentRecipeProps = {
 };
 
 const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
+  console.log(currentRecipe);
   return (
-    <article>
+    <section id="current-recipe">
       <h1>{currentRecipe.title}</h1>
       <p>{currentRecipe.description}</p>
       <p>{currentRecipe.ingredients}</p>
@@ -18,7 +19,7 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
           ))}
         </ul>
       )}
-    </article>
+    </section>
   );
 };
 

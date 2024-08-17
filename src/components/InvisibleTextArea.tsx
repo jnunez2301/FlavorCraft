@@ -5,7 +5,7 @@ const InvisibleTextArea = styled.textarea`
   outline: none;
   background: transparent;
   padding: 1rem;
-  color: white;
+  color: var(--theme-white);
   width: 100%;
   margin: .3rem;
   font-size: 1.5rem;

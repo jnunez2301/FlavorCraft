@@ -1,5 +1,5 @@
 import { useForm, zodResolver } from "@mantine/form";
-import { set, z } from "zod";
+import { z } from "zod";
 import { useResolveApi } from "../../hooks/useResolveApi";
 import Back from "../../components/Back";
 import InvisibleInput from "../../components/InvisibleInput";
@@ -19,8 +19,10 @@ import {
 } from "@tabler/icons-react";
 import { Recipe } from "../../model/Recipe";
 import CurrentRecipe from "../CurrentRecipe";
+import { useSession } from "../../auth/SessionContext";
 
 const RecipeSchema = z.object({
+  userId: z.string().min(1),
   title: z
     .string({
       message: "Title is required",
@@ -45,7 +47,8 @@ const RecipeSchema = z.object({
     .number({
       message: "Calories per serving is required",
     })
-    .min(1, { message: "Calories per serving must be at least 1" }),
+    .default(1)
+    .optional(),
   servings: z
     .number({
       message: "Servings is required",
@@ -69,7 +72,6 @@ const RecipeSchema = z.object({
         message: "Sauce instructions is required",
       })
     )
-    .min(1, { message: "Sauce instructions must be at least 1" })
     .optional(),
   instructions: z
     .array(
@@ -84,7 +86,6 @@ const RecipeSchema = z.object({
         message: "Side dishes recommendations is required",
       })
     )
-    .min(1, { message: "Side dishes recommendations must be at least 1" })
     .optional(),
   backgroundImg: z
     .string({
@@ -93,7 +94,10 @@ const RecipeSchema = z.object({
     .optional(),
 });
 const RecipeEditor = () => {
+  // TODO: Add userSession
+  const { userSession } = useSession();
   const initialValues: Recipe = {
+    userId: "",
     title: "",
     description: "",
     category: "",
@@ -113,6 +117,8 @@ const RecipeEditor = () => {
     initialValues,
   });
   const { postApi, zodValidationErrors } = useResolveApi();
+  const [instructions, setInstructions] = useState<string[]>([]);
+  const [currentInstruction, setCurrentInstruction] = useState<string>("");
   const [currentIngredient, setCurrentIngredient] = useState<string>("");
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [currentSideDish, setCurrentSideDish] = useState<string>("");
@@ -123,21 +129,43 @@ const RecipeEditor = () => {
   const [currentRecipe, setCurrentRecipe] = useState<Recipe>(initialValues);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const handleSubmit = (values: typeof initialValues) => {
+    values.userId = userSession?._id;
     postApi("recipes", values)
       .then((response) => {
         if (response?.success) {
           form.reset();
-          console.log("Recipe added successfully");
+          setInstructions([]);
+          setIngredients([]);
+          setSideDishes([]);
+          setSauceInstructions([]);
         }
       })
       .catch((error) => {
         console.error("Error adding recipe", error);
       });
   };
+  const handleAddInstruction = () => {
+    if (currentInstruction) {
+      setInstructions((prev) => {
+        const newList = prev.concat(currentInstruction);
+        form.setFieldValue("instructions", newList);
+        return newList;
+      });
+      setCurrentInstruction("");
+    }
+  };
+  const handleRemoveInstruction = (index: number) => {
+    setInstructions((prev) => {
+      const newList = prev.filter((_, i) => i !== index);
+      form.setFieldValue("instructions", newList);
+      return newList;
+    });
+  };
   const handleAddIngredient = () => {
     if (currentIngredient) {
       setIngredients((prev) => {
         const newList = prev.concat(currentIngredient);
+        form.setFieldValue("ingredients", newList);
         return newList;
       });
       setCurrentIngredient("");
@@ -146,6 +174,7 @@ const RecipeEditor = () => {
   const handleRemoveIngredient = (index: number) => {
     setIngredients((prev) => {
       const newList = prev.filter((_, i) => i !== index);
+      form.setFieldValue("ingredients", newList);
       return newList;
     });
   };
@@ -153,6 +182,7 @@ const RecipeEditor = () => {
     if (currentSauceInstruction) {
       setSauceInstructions((prev) => {
         const newList = prev.concat(currentSauceInstruction);
+        form.setFieldValue("sauceInstructions", newList);
         return newList;
       });
       setCurrentSauceInstruction("");
@@ -161,6 +191,7 @@ const RecipeEditor = () => {
   const handleRemoveSauceInstruction = (index: number) => {
     setSauceInstructions((prev) => {
       const newList = prev.filter((_, i) => i !== index);
+      form.setFieldValue("sauceInstructions", newList);
       return newList;
     });
   };
@@ -168,6 +199,7 @@ const RecipeEditor = () => {
     if (currentSideDish) {
       setSideDishes((prev) => {
         const newList = prev.concat(currentSideDish);
+        form.setFieldValue("sideDishesReeccomendations", newList);
         return newList;
       });
       setCurrentSideDish("");
@@ -176,27 +208,10 @@ const RecipeEditor = () => {
   const handleRemoveSideDish = (index: number) => {
     setSideDishes((prev) => {
       const newList = prev.filter((_, i) => i !== index);
+      form.setFieldValue("sideDishesReeccomendations", newList);
       return newList;
     });
   };
-  useEffect(() => {
-    if (ingredients.length > 0) {
-      form.setFieldValue("ingredients", ingredients);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setIngredients]);
-  useEffect(() => {
-    if (sauceInstructions.length > 0) {
-      form.setFieldValue("sauceInstructions", sauceInstructions);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setSauceInstructions]);
-  useEffect(() => {
-    if (sideDishes.length > 0) {
-      form.setFieldValue("sideDishesReeccomendations", sideDishes);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setSideDishes]);
   useEffect(() => {
     const currentRecipe = form.getValues();
     setCurrentRecipe(currentRecipe);
@@ -204,7 +219,6 @@ const RecipeEditor = () => {
   const handlePreview = () => {
     setIsPreview((prev) => !prev);
   };
-  console.log(currentRecipe)
   const centerFlex = {
     display: "flex",
     alignItems: "center",
@@ -220,314 +234,416 @@ const RecipeEditor = () => {
         position: "relative",
       }}
     >
-      <nav
-        style={{
-          position: "sticky",
-          top: "0",
-          backgroundColor: "var(--bg-color)",
-          borderBottom: "1px solid var(--accent-color)",
-          padding: "1rem 0",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <Back />
-        <div id="control-buttons" 
-        style={{
-          display: "flex",
-          gap: "1rem",
-        }}>
-          <FancyButton onClick={handlePreview}>
-            <IconBinocularsFilled size={iconSize} />
-            <h4>Preview</h4>
-          </FancyButton>
-          <FancyButton>
-            <IconDeviceFloppy size={iconSize} />
-            <h4>Save</h4>
-          </FancyButton>
-        </div>
-      </nav>
       <form
-        style={{
-          border: "1px solid var(--accent-color)",
-          width: "820px",
-          padding: "1rem",
-          display: isPreview ? "none" : "grid",
-          gap: "2rem",
-          margin: "0 auto",
-          backgroundColor: "var(--bg-color)",
-        }}
+        style={{ position: "relative" }}
         onSubmit={form.onSubmit(handleSubmit, zodValidationErrors)}
       >
-        <p>Items that are not marked with * are optional</p>
-        <header>
-          <h2>Title*</h2>
+        <nav
+          style={{
+            position: "sticky",
+            top: "0",
+            backgroundColor: "var(--bg-color)",
+            borderBottom: "1px solid var(--accent-color)",
+            padding: "1rem 0",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Back />
+          <div
+            id="control-buttons"
+            style={{
+              display: "flex",
+              gap: "1rem",
+            }}
+          >
+            <FancyButton onClick={handlePreview}>
+              <IconBinocularsFilled size={iconSize} />
+              <h4>Preview</h4>
+            </FancyButton>
+            <FancyButton
+              as={"button"}
+              style={{
+                color: "var(--theme-white)",
+              }}
+            >
+              <IconDeviceFloppy size={iconSize} />
+              <h4>Save</h4>
+            </FancyButton>
+          </div>
+        </nav>
+        <div
+          style={{
+            border: "1px solid var(--accent-color)",
+            width: "820px",
+            padding: "1rem",
+            display: isPreview ? "none" : "grid",
+            gap: "2rem",
+            margin: "0 auto",
+            backgroundColor: "var(--bg-color)",
+          }}
+        >
+          <p>Items that are not marked with * are optional</p>
+          <header>
+            <h2>Title*</h2>
+            <InvisibleInput
+              placeholder="Type your title"
+              $size="large"
+              {...form.getInputProps("title")}
+              required
+            />
+          </header>
+          <h2>Prep Time*</h2>
+          <div style={centerFlex}>
+            <IconStopwatch size={iconSize} />
+            <InvisibleInput
+              placeholder="Prep time"
+              $size="medium"
+              type="number"
+              min={1}
+              onChange={(event) => {
+                const value = parseInt(event.target.value);
+                form.setFieldValue("prepTime", value);
+              }}
+            />
+            <p>Minutes</p>
+          </div>
+          <aside>
+            <h2>Description*</h2>
+            <InvisibleTextArea
+              placeholder="Describe your dish"
+              {...form.getInputProps("description")}
+              required
+            />
+          </aside>
+          <aside
+            style={{
+              display: "flex",
+              gap: "1rem",
+              alignItems: "center",
+            }}
+          >
+            <header
+              style={{
+                flex: 1,
+              }}
+            >
+              <h2>Ingredients*</h2>
+              <InvisibleInput
+                placeholder="List your ingredients"
+                onKeyDown={(event) => {
+                  
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    handleAddIngredient();
+                  }
+                }}
+                onChange={(event) => setCurrentIngredient(event.target.value)}
+                onBlur={() => {
+                  if (currentIngredient.length > 0) {
+                    handleAddIngredient();
+                  }
+                }}
+                required
+              />
+            </header>
+
+            <FancyButton
+              style={{
+                height: "54px",
+              }}
+              onClick={() => handleAddIngredient()}
+            >
+              <IconPlus />
+              Ingredient
+            </FancyButton>
+          </aside>
+
+          {ingredients &&
+            ingredients.length > 0 &&
+            ingredients.map((ingredient, index) => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "justify-between",
+                  gap: "1rem",
+                  overflowY: "auto",
+                }}
+                key={index}
+              >
+                <p style={{ flex: 1 }}>{ingredient}</p>
+                <FancyButton
+                  style={{
+                    height: "34px",
+                  }}
+                  onClick={() => handleRemoveIngredient(index)}
+                >
+                  <IconTrash size={16} />
+                </FancyButton>
+              </div>
+            ))}
+          <aside
+            style={{
+              display: "flex",
+              gap: "1rem",
+              alignItems: "center",
+            }}
+          >
+            <header
+              style={{
+                flex: 1,
+              }}
+            >
+              <h2>Instructions</h2>
+              <InvisibleInput
+                placeholder="List your instructions"
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleAddInstruction();
+                  }
+                }}
+                onBlur={() => {
+                  if (currentInstruction.length > 0) {
+                    handleAddInstruction();
+                  }
+                }}
+                onChange={(event) => setCurrentInstruction(event.target.value)}
+                required
+              />
+            </header>
+            <FancyButton
+              style={{
+                height: "54px",
+              }}
+              onClick={() => handleAddInstruction()}
+            >
+              <IconPlus />
+              Step
+            </FancyButton>
+          </aside>
+          {instructions &&
+            instructions.length > 0 &&
+            instructions.map((instruction, index) => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "justify-between",
+                  gap: "1rem",
+                  overflowY: "auto",
+                }}
+                key={index}
+              >
+                <p style={{ flex: 1 }}>{instruction}</p>
+                <FancyButton
+                  style={{
+                    height: "34px",
+                  }}
+                  onClick={() => handleRemoveInstruction(index)}
+                >
+                  <IconTrash size={16} />
+                </FancyButton>
+              </div>
+            ))}
+          <aside
+            style={{
+              display: "flex",
+              gap: "1rem",
+              alignItems: "center",
+            }}
+          >
+            <header
+              style={{
+                flex: 1,
+              }}
+            >
+              <h2>Sauce</h2>
+              <p>
+                Totally optional here you can add your sauce instructions for
+                your dish
+              </p>
+              <InvisibleInput
+                placeholder="List your ingredients"
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleAddSauceInstruction();
+                  }
+                }}
+                onBlur={() => {
+                  if (currentSauceInstruction.length > 0) {
+                    handleAddSauceInstruction();
+                  }
+                }}  
+                onChange={(event) =>
+                  setCurrentSauceInstruction(event.target.value)
+                }
+              />
+            </header>
+            <FancyButton
+              style={{
+                height: "54px",
+              }}
+              onClick={() => handleAddSauceInstruction()}
+            >
+              <IconPlus />
+              Step
+            </FancyButton>
+          </aside>
+          {sauceInstructions &&
+            sauceInstructions.length > 0 &&
+            sauceInstructions.map((ingredient, index) => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "justify-between",
+                  gap: "1rem",
+                  overflowY: "auto",
+                }}
+                key={index}
+              >
+                <p style={{ flex: 1 }}>{ingredient}</p>
+                <FancyButton
+                  style={{
+                    height: "34px",
+                  }}
+                  onClick={() => handleRemoveSauceInstruction(index)}
+                >
+                  <IconTrash size={16} />
+                </FancyButton>
+              </div>
+            ))}
+          <aside
+            style={{
+              display: "flex",
+              gap: "1rem",
+              alignItems: "center",
+            }}
+          >
+            <header style={{ flex: 1 }}>
+              <h2>Side dishes</h2>
+              <p>Optional but you can add some recommendations</p>
+              <InvisibleInput
+                placeholder="List your side dishes recommendations"
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleAddSideDish();
+                  }
+                }}
+                onBlur={() => {
+                  if (currentSideDish.length > 0) {
+                    handleAddSideDish();
+                  }
+                }}
+                onChange={(event) => setCurrentSideDish(event.target.value)}
+              />
+            </header>
+            <FancyButton
+              style={{
+                height: "54px",
+              }}
+              onClick={() => handleAddSideDish()}
+            >
+              <IconPlus />
+              Side dish
+            </FancyButton>
+          </aside>
+          {sideDishes &&
+            sideDishes.length > 0 &&
+            sideDishes.map((sideDish, index) => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "justify-between",
+                  gap: "1rem",
+                  overflowY: "auto",
+                }}
+                key={index}
+              >
+                <p style={{ flex: 1 }}>{sideDish}</p>
+                <FancyButton
+                  style={{
+                    height: "34px",
+                  }}
+                  onClick={() => handleRemoveSideDish(index)}
+                >
+                  <IconTrash size={16} />
+                </FancyButton>
+              </div>
+            ))}
+          <aside
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "1rem",
+            }}
+          >
+            <div>
+              <h4>Category*</h4>
+              <div style={centerFlex}>
+                <IconCategory size={iconSize} />
+                <InvisibleInput
+                  placeholder="Main Dish, Dessert, etc."
+                  $size="medium"
+                  {...form.getInputProps("category")}
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <h4>Cousine*</h4>
+              <div style={centerFlex}>
+                <IconDumpling size={iconSize} />
+                <InvisibleInput
+                  placeholder="Korean, Mexican, etc."
+                  $size="medium"
+                  {...form.getInputProps("typeOfCousine")}
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <h4>Calories</h4>
+              <div style={centerFlex}>
+                <IconFlame size={iconSize} />
+                <InvisibleInput
+                  placeholder="Calories per serving"
+                  $size="medium"
+                  type="number"
+                  onChange={(event) => {
+                    const value = parseInt(event.target.value);
+                    form.setFieldValue("caloriesPerServing", value);
+                  }}
+                />
+              </div>
+            </div>
+            <div>
+              <h4>Servings</h4>
+              <div style={centerFlex}>
+                <IconUsersGroup size={iconSize} />
+                <InvisibleInput
+                  placeholder="Servings"
+                  $size="medium"
+                  type="number"
+                  onChange={(event) => {
+                    const value = parseInt(event.target.value);
+                    form.setFieldValue("servings", value);
+                  }}
+                  required
+                />
+              </div>
+            </div>
+          </aside>
+          <h2>Dish Photo</h2>
           <InvisibleInput
-            placeholder="Type your title"
-            $size="large"
-            {...form.getInputProps("title")}
-          />
-        </header>
-        <h2>Prep Time</h2>
-        <div style={centerFlex}>
-          <IconStopwatch size={iconSize} />
-          <InvisibleInput
-            placeholder="Prep time"
+            type="file"
             $size="medium"
-            type="number"
-            min={1}
-            {...form.getInputProps("prepTime")}
+            accept="image/*"
+            {...form.getInputProps("backgroundImg")}
           />
         </div>
-        <aside>
-          <h2>Description*</h2>
-          <InvisibleTextArea
-            placeholder="Describe your dish"
-            {...form.getInputProps("description")}
-          />
-        </aside>
-        <aside
-          style={{
-            display: "flex",
-            gap: "1rem",
-            alignItems: "center",
-          }}
-        >
-          <header
-            style={{
-              flex: 1,
-            }}
-          >
-            <h2>Ingredients*</h2>
-            <InvisibleInput
-              placeholder="List your ingredients"
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  handleAddIngredient();
-                }
-              }}
-              onChange={(event) => setCurrentIngredient(event.target.value)}
-            />
-          </header>
-          <FancyButton
-            style={{
-              height: "54px",
-            }}
-            onClick={() => handleAddIngredient()}
-          >
-            <IconPlus />
-            Ingredient
-          </FancyButton>
-        </aside>
-        {ingredients &&
-          ingredients.length > 0 &&
-          ingredients.map((ingredient, index) => (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "justify-between",
-                gap: "1rem",
-                overflowY: "auto",
-              }}
-              key={index}
-            >
-              <p style={{ flex: 1 }}>{ingredient}</p>
-              <FancyButton
-                style={{
-                  height: "34px",
-                }}
-                onClick={() => handleRemoveIngredient(index)}
-              >
-                <IconTrash size={16} />
-              </FancyButton>
-            </div>
-          ))}
-        <aside
-          style={{
-            display: "flex",
-            gap: "1rem",
-            alignItems: "center",
-          }}
-        >
-          <header
-            style={{
-              flex: 1,
-            }}
-          >
-            <h2>Sauce</h2>
-            <p>
-              Totally optional here you can add your sauce instructions for your
-              dish
-            </p>
-            <InvisibleInput
-              placeholder="List your ingredients"
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  handleAddSauceInstruction();
-                }
-              }}
-              onChange={(event) =>
-                setCurrentSauceInstruction(event.target.value)
-              }
-            />
-          </header>
-          <FancyButton
-            style={{
-              height: "54px",
-            }}
-            onClick={() => handleAddSauceInstruction()}
-          >
-            <IconPlus />
-            Step
-          </FancyButton>
-        </aside>
-        {sauceInstructions &&
-          sauceInstructions.length > 0 &&
-          sauceInstructions.map((ingredient, index) => (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "justify-between",
-                gap: "1rem",
-                overflowY: "auto",
-              }}
-              key={index}
-            >
-              <p style={{ flex: 1 }}>{ingredient}</p>
-              <FancyButton
-                style={{
-                  height: "34px",
-                }}
-                onClick={() => handleRemoveSauceInstruction(index)}
-              >
-                <IconTrash size={16} />
-              </FancyButton>
-            </div>
-          ))}
-        <aside
-          style={{
-            display: "flex",
-            gap: "1rem",
-            alignItems: "center",
-          }}
-        >
-          <header style={{ flex: 1 }}>
-            <h2>Side dishes</h2>
-            <p>Optional but you can add some recommendations</p>
-            <InvisibleInput
-              placeholder="List your side dishes recommendations"
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  handleAddSideDish();
-                }
-              }}
-              onChange={(event) => setCurrentSideDish(event.target.value)}
-            />
-          </header>
-          <FancyButton
-            style={{
-              height: "54px",
-            }}
-            onClick={() => handleAddSideDish()}
-          >
-            <IconPlus />
-            Side dish
-          </FancyButton>
-        </aside>
-        {sideDishes &&
-          sideDishes.length > 0 &&
-          sideDishes.map((sideDish, index) => (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "justify-between",
-                gap: "1rem",
-                overflowY: "auto",
-              }}
-              key={index}
-            >
-              <p style={{ flex: 1 }}>{sideDish}</p>
-              <FancyButton
-                style={{
-                  height: "34px",
-                }}
-                onClick={() => handleRemoveSideDish(index)}
-              >
-                <IconTrash size={16} />
-              </FancyButton>
-            </div>
-          ))}
-        <aside
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "1rem",
-          }}
-        >
-          <div>
-            <h4>Category</h4>
-            <div style={centerFlex}>
-              <IconCategory size={iconSize} />
-              <InvisibleInput
-                placeholder="Main Dish, Dessert, etc."
-                $size="medium"
-                {...form.getInputProps("category")}
-              />
-            </div>
-          </div>
-          <div>
-            <h4>Cousine</h4>
-            <div style={centerFlex}>
-              <IconDumpling size={iconSize} />
-              <InvisibleInput
-                placeholder="Type of cousine"
-                $size="medium"
-                {...form.getInputProps("typeOfCousine")}
-              />
-            </div>
-          </div>
-          <div>
-            <h4>Calories</h4>
-            <div style={centerFlex}>
-              <IconFlame size={iconSize} />
-              <InvisibleInput
-                placeholder="Calories per serving"
-                $size="medium"
-                type="number"
-                min={1}
-                max={1000}
-                {...form.getInputProps("caloriesPerServing")}
-              />
-            </div>
-          </div>
-          <div>
-            <h4>Servings</h4>
-            <div style={centerFlex}>
-              <IconUsersGroup size={iconSize} />
-              <InvisibleInput
-                placeholder="Servings"
-                $size="medium"
-                type="number"
-                min={1}
-                {...form.getInputProps("servings")}
-              />
-            </div>
-          </div>
-        </aside>
-        <h2>Dish Photo</h2>
-        <InvisibleInput
-          type="file"
-          $size="medium"
-          accept="image/*"
-          {...form.getInputProps("backgroundImg")}
-        />
-        <h2>Instructions*</h2>
-        <InvisibleTextArea
-          placeholder="Preheat the oven to 350F, etc..."
-          {...form.getInputProps("instructions")}
-        />
       </form>
-      {/* {currentRecipe ? <CurrentRecipe recipe={currentRecipe} /> : ''} */}
+      {isPreview && currentRecipe ? (
+        <CurrentRecipe currentRecipe={currentRecipe} />
+      ) : null}
     </section>
   );
 };

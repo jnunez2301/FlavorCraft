@@ -26,6 +26,7 @@ const Theme = styled.div<{ $themeMode: ThemeType }>`
     $themeMode === ThemeType.Dark
       ? "var(--color-quaternary)"
       : "var(--color-primary)"};
+  --theme-white: ${({ $themeMode }) => ($themeMode === ThemeType.Dark ? "white" : "black")};
   /* Dot background */
   --dot-color: ${({ $themeMode }) =>
     $themeMode === ThemeType.Dark ? "lightgray" : "gray"};

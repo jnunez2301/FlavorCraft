@@ -6,7 +6,7 @@ const InvisibleInput = styled.input<{ $size?: "small" | "medium" | "large" }>`
   background: transparent;
   padding: 1rem;
   margin: 0.3rem;
-  color: white;
+  color: var(--theme-white);
   border-bottom: 2px solid var(--accent-color);
   width: 100%;
 
