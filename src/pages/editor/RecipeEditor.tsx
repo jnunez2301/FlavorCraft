@@ -20,9 +20,12 @@ import {
 import { Recipe } from "../../model/Recipe";
 import CurrentRecipe from "../CurrentRecipe";
 import { useSession } from "../../auth/SessionContext";
+import Loader from "../../components/Loader";
 
 const RecipeSchema = z.object({
-  userId: z.string().min(1),
+  userId: z.string({
+    message: "User id is required",
+  }),
   title: z
     .string({
       message: "Title is required",
@@ -93,11 +96,9 @@ const RecipeSchema = z.object({
     })
     .optional(),
 });
-const RecipeEditor = () => {
-  // TODO: Add userSession
-  const { userSession } = useSession();
+const NewRecipe = ({ userId }: { userId: string }) => {
   const initialValues: Recipe = {
-    userId: "",
+    userId: userId || "",
     title: "",
     description: "",
     category: "",
@@ -129,7 +130,6 @@ const RecipeEditor = () => {
   const [currentRecipe, setCurrentRecipe] = useState<Recipe>(initialValues);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const handleSubmit = (values: typeof initialValues) => {
-    values.userId = userSession?._id;
     postApi("recipes", values)
       .then((response) => {
         if (response?.success) {
@@ -332,7 +332,6 @@ const RecipeEditor = () => {
               <InvisibleInput
                 placeholder="List your ingredients"
                 onKeyDown={(event) => {
-                  
                   if (event.key === "Enter") {
                     event.preventDefault();
                     handleAddIngredient();
@@ -394,11 +393,12 @@ const RecipeEditor = () => {
                 flex: 1,
               }}
             >
-              <h2>Instructions</h2>
+              <h2>Instructions*</h2>
               <InvisibleInput
                 placeholder="List your instructions"
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
+                    event.preventDefault();
                     handleAddInstruction();
                   }
                 }}
@@ -408,7 +408,6 @@ const RecipeEditor = () => {
                   }
                 }}
                 onChange={(event) => setCurrentInstruction(event.target.value)}
-                required
               />
             </header>
             <FancyButton
@@ -465,6 +464,7 @@ const RecipeEditor = () => {
                 placeholder="List your ingredients"
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
+                    event.preventDefault();
                     handleAddSauceInstruction();
                   }
                 }}
@@ -472,7 +472,7 @@ const RecipeEditor = () => {
                   if (currentSauceInstruction.length > 0) {
                     handleAddSauceInstruction();
                   }
-                }}  
+                }}
                 onChange={(event) =>
                   setCurrentSauceInstruction(event.target.value)
                 }
@@ -525,6 +525,7 @@ const RecipeEditor = () => {
                 placeholder="List your side dishes recommendations"
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
+                    event.preventDefault();
                     handleAddSideDish();
                   }
                 }}
@@ -646,6 +647,11 @@ const RecipeEditor = () => {
       ) : null}
     </section>
   );
+};
+
+const RecipeEditor = () => {
+  const { userSession } = useSession();
+  return userSession ? <NewRecipe userId={userSession._id} /> : <Loader />;
 };
 
 export default RecipeEditor;
