@@ -98,7 +98,7 @@ const RecipeSchema = z.object({
 });
 const NewRecipe = ({ userId }: { userId: string }) => {
   const initialValues: Recipe = {
-    userId: userId || "",
+    userId: userId,
     title: "",
     description: "",
     category: "",
