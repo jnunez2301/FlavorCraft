@@ -14,7 +14,7 @@ const Back = () => {
     });
   };
   return (
-    <FancyButton $rounded onClick={handleGoBack}>
+    <FancyButton id="back-button" $rounded onClick={handleGoBack}>
       <IconArrowLeft size={24} />
     </FancyButton>
   );

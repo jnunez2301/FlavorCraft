@@ -6,6 +6,8 @@ import { useSession } from "../../auth/SessionContext";
 import type { Recipe } from "../../model/Recipe";
 import Loader from "../../components/Loader";
 import CurrentRecipe from "../CurrentRecipe";
+import FancyButton from "../../components/FancyButton";
+import { IconDownload, IconEdit, IconFileMinus } from "@tabler/icons-react";
 
 const RecipeById = () => {
   const { recipeId } = useParams({
@@ -35,7 +37,39 @@ const RecipeById = () => {
         padding: "1rem",
       }}
     >
-      <Back />
+      <nav
+        id="recipe-nav"
+        style={{
+          display: "flex",
+          justifyContent: "justify-between",
+          gap: "1rem",
+          padding: "1rem",
+          marginBottom: ".5rem",
+          borderBottom: "1px solid var(--theme-white)",
+          backgroundColor: "var(--bg-color)",
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <Back />
+        </div>
+        <div style={{
+          display: "flex",
+          gap: "1rem",
+        }}>
+          <FancyButton>
+            <IconEdit size={20} />
+            Edit
+          </FancyButton>
+          <FancyButton>
+            <IconFileMinus size={20} />
+            Delete
+          </FancyButton>
+          <FancyButton>
+            <IconDownload size={20} />
+            Download
+          </FancyButton>
+        </div>
+      </nav>
       {recipe ? <CurrentRecipe currentRecipe={recipe} /> : <Loader />}
     </section>
   );

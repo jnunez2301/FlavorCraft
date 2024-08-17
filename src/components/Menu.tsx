@@ -1,3 +1,4 @@
+import { keyframes } from "@emotion/css";
 import styled from "@emotion/styled";
 
 type MenuProps = {
@@ -5,6 +6,15 @@ type MenuProps = {
   label?: string;
   children: React.ReactNode;
 };
+const translateY = keyframes`
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
 const ShowMenu = styled.div`
   display: flex;
   flex-direction: column;
@@ -16,6 +26,7 @@ const ShowMenu = styled.div`
   border-radius: 0.3rem;
   box-shadow: 0 0 5px var(--info-color);
   z-index: 100;
+  animation: ${translateY} 0.2s ease-in-out;
 `;
 export const MenuOption = styled.div`
   display: flex;
