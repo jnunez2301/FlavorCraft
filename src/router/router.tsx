@@ -74,7 +74,7 @@ const recipeRouteById = createRoute({
 const recipeEditRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/editor",
-  component: () => <RecipeEditor/>,
+  component: () => <RecipeEditor />,
 });
 const routeTree = rootRoute.addChildren([
   indexRoute,

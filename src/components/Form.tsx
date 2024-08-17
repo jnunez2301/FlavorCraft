@@ -10,6 +10,7 @@ const Form = styled.form`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    font-weight: bold;
   }
 `;
 export default Form;

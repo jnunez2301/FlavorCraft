@@ -7,7 +7,7 @@ import Loader from "../../components/Loader";
 const RecipeSection = styled.section`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 310px));
-  gap: 1rem;
+  gap: 1.5rem;
   margin-bottom: 1rem;
   padding: 1rem 0;
   align-items: center;
@@ -28,19 +28,17 @@ const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
           <article
             key={recipe._id}
             className={css({
+              minHeight: "310px",
               height: "100%",
               display: "grid",
               padding: "1rem",
               justifyItems: "center",
               alignContent: "space-between",
               border: "1px solid var(--info-color)",
-              borderRadius: ".3rem",
               transition: "all 0.2s ease-in",
               ":hover": {
-                transform: "scale(1.02)",
-                transition: "transform 0.2s ease-in",
-                backgroundColor: "var(--info-color-hover)",
-                color: "var(--bg-color)",
+                color: "var(--accent-color)",
+                boxShadow: "10px 10px 0px var(--accent-color)",
               },
             })}
             onClick={() => {
@@ -52,6 +50,7 @@ const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
             <h2>{recipe.title}</h2>
             <img
               style={{
+                minWidth: "200px",
                 width: "100%",
                 maxWidth: "300px",
                 height: "auto",

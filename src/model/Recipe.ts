@@ -1,5 +1,6 @@
 export type Recipe = {
   _id?: string;
+  userId?: string;
   title: string;
   description: string;
   category: string;
