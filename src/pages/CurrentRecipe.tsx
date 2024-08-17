@@ -1,7 +1,13 @@
 import styled from "@emotion/styled";
 import Badge from "../components/Badge";
 import { Recipe } from "../model/Recipe";
-import { IconCategory, IconDumpling, IconFlame, IconStopwatch, IconUsersGroup } from "@tabler/icons-react";
+import {
+  IconCategory,
+  IconDumpling,
+  IconFlame,
+  IconStopwatch,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 
 type CurrentRecipeProps = {
   currentRecipe: Recipe;
@@ -19,22 +25,48 @@ const RecipeContainer = styled.section`
   height: 85vh;
   width: fit-content;
   position: relative;
-
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) var(--bg-color);
 `;
 
 const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
   return (
     <RecipeContainer id="current-recipe">
-      {currentRecipe.title ? (
-        <h1>{currentRecipe.title}</h1>
-      ) : (
-        <h2>Recipe Title</h2>
-      )}
-      {currentRecipe.description ? (
-        <p>{currentRecipe.description}</p>
-      ) : (
-        <p>Recipe Description</p>
-      )}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          textAlign: "right",
+          gap: "1rem",
+        }}
+      >
+        <img
+          src={currentRecipe.backgroundImg}
+          alt={`Image of ${currentRecipe.title}`}
+          style={{
+            width: "10rem",
+            height: "auto",
+          }}
+          onError={(e) => {
+            e.currentTarget.src = "/soup.svg";
+          }}
+        />
+        <div>
+          {currentRecipe.title ? (
+            <h1>{currentRecipe.title}</h1>
+          ) : (
+            <h2>Recipe Title</h2>
+          )}
+          {currentRecipe.description ? (
+            <p style={{
+              width: "25rem",
+            }}>{currentRecipe.description}</p>
+          ) : (
+            <p>Recipe Description</p>
+          )}
+        </div>
+      </div>
       {/* <img
         src={currentRecipe.backgroundImg}
         alt={`Image of ${currentRecipe.title}`}

@@ -23,6 +23,7 @@ import { Recipe } from "../../model/Recipe";
 import CurrentRecipe from "../CurrentRecipe";
 import { useSession } from "../../auth/SessionContext";
 import Loader from "../../components/Loader";
+import { useNavigate } from "@tanstack/react-router";
 
 const RecipeSchema = z.object({
   userId: z.string({
@@ -106,7 +107,7 @@ const NewRecipe = ({
   recipeId?: string | null;
 }) => {
   const { getApi, postApi, updateApi, zodValidationErrors } = useResolveApi();
-
+  const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState<Recipe>({
     userId: userId,
     title: "",
@@ -141,13 +142,7 @@ const NewRecipe = ({
         });
     }
   }, [recipeId, userId]);
-  useEffect(() => {
-    form.setValues(initialValues);
-    setInstructions(initialValues.instructions || []);
-    setIngredients(initialValues.ingredients || []);
-    setSideDishes(initialValues.sideDishesRecommendations || []);
-    setSauceInstructions(initialValues.sauceInstructions || []);
-  }, [initialValues]);
+
   const [instructions, setInstructions] = useState<string[]>([]);
   const [currentInstruction, setCurrentInstruction] = useState<string>("");
   const [currentIngredient, setCurrentIngredient] = useState<string>("");
@@ -155,11 +150,25 @@ const NewRecipe = ({
   const [currentSideDish, setCurrentSideDish] = useState<string>("");
   const [sideDishes, setSideDishes] = useState<string[]>([]);
   const [backgroundImageName, setBackgroundImageName] = useState<string>("");
-  const [currentSauceInstruction, setCurrentSauceInstruction] =
-    useState<string>("");
+  const [currentSauceInstruction, setCurrentSauceInstruction] = useState<string>("");
   const [sauceInstructions, setSauceInstructions] = useState<string[]>([]);
   const [currentRecipe, setCurrentRecipe] = useState<Recipe>(initialValues);
   const [isPreview, setIsPreview] = useState<boolean>(false);
+  // Calories, Servings, Prep Time
+  const [caloriesPerServing, setCaloriesPerServing] = useState<number>(0);
+  const [servings, setServings] = useState<number>(0);
+  const [prepTime, setPrepTime] = useState<number>(0);
+  useEffect(() => {
+    form.setValues(initialValues);
+    setInstructions(initialValues.instructions || []);
+    setIngredients(initialValues.ingredients || []);
+    setSideDishes(initialValues.sideDishesRecommendations || []);
+    setSauceInstructions(initialValues.sauceInstructions || []);
+    setBackgroundImageName(initialValues.backgroundImg || "");
+    setCaloriesPerServing(initialValues.caloriesPerServing || 0);
+    setServings(initialValues.servings || 0);
+    setPrepTime(initialValues.prepTime || 0);
+  }, [initialValues]);
   const handleSubmit = (values: typeof initialValues) => {
     if (recipeId) {
       updateApi(`recipes/${recipeId}/user/${userId}`, values)
@@ -180,6 +189,10 @@ const NewRecipe = ({
             setIngredients([]);
             setSideDishes([]);
             setSauceInstructions([]);
+            setBackgroundImageName("");
+            navigate({
+              to: "/",
+            });
           }
         })
         .catch((error) => {
@@ -309,7 +322,7 @@ const NewRecipe = ({
             <FancyButton onClick={handlePreview}>
               {isPreview ? (
                 <>
-                  <IconCircuitSwitchClosed size={iconSize}/>
+                  <IconCircuitSwitchClosed size={iconSize} />
                   <h4>Hide</h4>
                 </>
               ) : (
@@ -358,9 +371,12 @@ const NewRecipe = ({
               placeholder="Prep time"
               $size="medium"
               type="number"
-              min={1}
-              {...form.getInputProps("prepTime")}
-            />
+              value={prepTime}
+              onChange={(event) => {
+                form.setFieldValue("prepTime", +event.target.value)
+                setPrepTime(Number(event.target.value))
+              }}
+              />
             <p>Minutes</p>
           </div>
           <aside>
@@ -667,7 +683,11 @@ const NewRecipe = ({
                   placeholder="Calories per serving"
                   $size="medium"
                   type="number"
-                  {...form.getInputProps("caloriesPerServing")}
+                  value={caloriesPerServing}
+                  onChange={(event) => {
+                    form.setFieldValue("caloriesPerServing", +event.target.value)
+                    setCaloriesPerServing(Number(event.target.value))
+                  }}
                 />
               </div>
             </div>
@@ -679,7 +699,11 @@ const NewRecipe = ({
                   placeholder="Servings"
                   $size="medium"
                   type="number"
-                  {...form.getInputProps("servings")}
+                  value={servings}
+                  onChange={(event) =>{                    
+                    form.setFieldValue("servings", +event.target.value)
+                    setServings(Number(event.target.value))
+                  }}
                   required
                 />
               </div>

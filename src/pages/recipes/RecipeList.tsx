@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 
 const RecipeSection = styled.section`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 310px));
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 19rem));
   gap: 1.5rem;
   margin-bottom: 1rem;
   padding: 1rem 0;
@@ -36,6 +36,7 @@ const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
               alignContent: "space-between",
               border: "1px solid var(--info-color)",
               transition: "all 0.2s ease-in",
+              textAlign: "center",
               ":hover": {
                 color: "var(--accent-color)",
                 boxShadow: "10px 10px 0px var(--accent-color)",

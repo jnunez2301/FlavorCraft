@@ -72,6 +72,13 @@ export const useResolveApi = () => {
       throw err;
     }
   }
+  /**
+   * Update data in the API with credentials
+   * You don't need to pass the full URL, just the endpoint
+   * @example updateApi("recipes/123", {title: "New title"})
+   * @param endpoint The endpoint to update in the API
+   * @param data The data to send to the API
+   */
   async function updateApi(endpoint: string, data: any) {
     try {
       const response = await fetch(`${apiUrl}${endpoint}`, {
@@ -100,6 +107,38 @@ export const useResolveApi = () => {
     }
   }
   /**
+   * Delete data in the API with credentials
+   * You don't need to pass the full URL, just the endpoint
+   * @example deleteApi("recipes/123")
+   * @param endpoint The endpoint to delete in the API
+   */
+  async function deleteApi(endpoint: string) {
+    try {
+      const response = await fetch(`${apiUrl}${endpoint}`, {
+        credentials: "include",
+        method: "DELETE",
+      });
+      const data: ApiResponse = await response.json();
+      if (!response.ok) {
+        if (response.status === 401) {
+          clearUserSession();
+        }
+        let errorMessage = "There was an error trying to reach the server";
+        if(data.message.toLowerCase().split(" ").includes("token")) errorMessage = "You must be logged in to access this page";
+        toast.error(errorMessage,{id: "api-error",});
+       
+        return;
+      }
+      return data;
+    } catch (err) {
+      console.error("Fetch error", err);
+      toast.error("There was an error trying to reach the server", {
+        id: "server-error",
+      });
+      return;
+    }
+  }
+  /**
    * Handle Zod validation errors
    * @param errors The errors object from Zod
    * @example zodValidationErrors(errors)
@@ -119,6 +158,7 @@ export const useResolveApi = () => {
     getApi,
     postApi,
     updateApi,
+    deleteApi,
     zodValidationErrors,
   };
 };
