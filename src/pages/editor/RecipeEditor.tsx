@@ -35,7 +35,7 @@ const RecipeSchema = z.object({
     .string({
       message: "Description is required",
     })
-    .min(10, { message: "Description must be at least 10 characters long" }),
+    .min(3, { message: "Description must be at least 3 characters long" }),
   category: z
     .string({
       message: "Category is required",
@@ -330,6 +330,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
             >
               <h2>Ingredients*</h2>
               <InvisibleInput
+                value={currentIngredient}
                 placeholder="List your ingredients"
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
@@ -343,7 +344,6 @@ const NewRecipe = ({ userId }: { userId: string }) => {
                     handleAddIngredient();
                   }
                 }}
-                required
               />
             </header>
 
@@ -395,6 +395,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
             >
               <h2>Instructions*</h2>
               <InvisibleInput
+                value={currentInstruction}
                 placeholder="List your instructions"
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
@@ -461,6 +462,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
                 your dish
               </p>
               <InvisibleInput
+                value={currentSauceInstruction}
                 placeholder="List your ingredients"
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
@@ -522,6 +524,7 @@ const NewRecipe = ({ userId }: { userId: string }) => {
               <h2>Side dishes</h2>
               <p>Optional but you can add some recommendations</p>
               <InvisibleInput
+                value={currentSideDish}
                 placeholder="List your side dishes recommendations"
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
