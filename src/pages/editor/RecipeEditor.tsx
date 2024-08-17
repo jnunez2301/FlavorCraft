@@ -161,7 +161,6 @@ const NewRecipe = ({
   const [currentRecipe, setCurrentRecipe] = useState<Recipe>(initialValues);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const handleSubmit = (values: typeof initialValues) => {
-    console.log("Form values", values);
     if (recipeId) {
       updateApi(`recipes/${recipeId}/user/${userId}`, values)
         .then((response) => {
@@ -281,7 +280,6 @@ const NewRecipe = ({
       id="recipe-editor"
       style={{
         padding: "1rem",
-        height: "100%",
         position: "relative",
       }}
     >

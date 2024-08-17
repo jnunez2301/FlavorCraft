@@ -29,7 +29,6 @@ const RecipeById = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSession]);
-
   return (
     <section
       style={{
