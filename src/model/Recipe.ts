@@ -13,4 +13,5 @@ export type Recipe = {
   instructions: string[];
   sideDishesRecommendations?: string[];
   backgroundImg?: string;
+  publicRecipe?: boolean;
 };

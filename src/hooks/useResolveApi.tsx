@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FormErrors } from "@mantine/form";
 import toast from "react-hot-toast";
-import { apiUrl } from "../util/enviroment";
+import { apiUrl } from "../util/environment";
 import ApiResponse from "../model/ApiResponse";
 import { useSession } from "../auth/SessionContext";
+import { useNavigate } from "@tanstack/react-router";
 
 export const useResolveApi = () => {
   const { clearUserSession } = useSession();
+  const navigate = useNavigate();
   /**
    * Get data from the API with credentials
    * You don't need to pass the full URL, just the endpoint
@@ -23,10 +25,12 @@ export const useResolveApi = () => {
         if (response.status === 401) {
           clearUserSession();
         }
-        let errorMessage = "There was an error trying to reach the server";
+        let errorMessage = data ? data.message : "There was an error trying to reach the server";
         if(data.message.toLowerCase().split(" ").includes("token")) errorMessage = "You must be logged in to access this page";
         toast.error(errorMessage,{id: "api-error",});
-       
+        navigate({
+          to: '..'
+        })
         return;
       }
       return data;
@@ -66,7 +70,7 @@ export const useResolveApi = () => {
       return responseData;
     } catch (err) {
       console.error("Fetch error: ", err);
-      toast.error("Error del servidor", {
+      toast.error("Server error", {
         id: "server-error",
       });
       throw err;
@@ -100,7 +104,7 @@ export const useResolveApi = () => {
       return responseData;
     } catch (err) {
       console.error("Fetch error: ", err);
-      toast.error("Error del servidor", {
+      toast.error("Server error", {
         id: "server-error",
       });
       throw err;
