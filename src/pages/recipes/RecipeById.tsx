@@ -57,9 +57,7 @@ const RecipeById = () => {
     })
     .then((response) => {
       if (response?.success) {
-        toast.success(response.message, {
-          id: "share-success",
-        });
+        toast.success(statusChange ? "Recipe is now public" : "Recipe is now private");
         navigator.clipboard.writeText(`${window.location.origin}/${recipeId}`);
         setTimeout(() => window.location.reload(), 1000);
       }
