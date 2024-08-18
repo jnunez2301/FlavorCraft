@@ -59,9 +59,13 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
             <h2>Recipe Title</h2>
           )}
           {currentRecipe.description ? (
-            <p style={{
-              width: "25rem",
-            }}>{currentRecipe.description}</p>
+            <p
+              style={{
+                width: "25rem",
+              }}
+            >
+              {currentRecipe.description}
+            </p>
           ) : (
             <p>Recipe Description</p>
           )}
@@ -141,21 +145,25 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
           <li key={index}>{instruction}</li>
         ))}
       </ul>
-      <h2>Sauce</h2>
       {currentRecipe.sauceInstructions && (
-        <ul>
-          {currentRecipe.sauceInstructions.map((sauce, index) => (
-            <li key={index}>{sauce}</li>
-          ))}
-        </ul>
+        <>
+          <h2>Sauce</h2>
+          <ul>
+            {currentRecipe.sauceInstructions.map((sauce, index) => (
+              <li key={index}>{sauce}</li>
+            ))}
+          </ul>
+        </>
       )}
-      <h2>Side Dishes</h2>
       {currentRecipe.sideDishesRecommendations && (
-        <ul>
-          {currentRecipe.sideDishesRecommendations.map((sideDish, index) => (
-            <li key={index}>{sideDish}</li>
-          ))}
-        </ul>
+        <>
+          <h2>Side Dishes</h2>
+          <ul>
+            {currentRecipe.sideDishesRecommendations.map((sideDish, index) => (
+              <li key={index}>{sideDish}</li>
+            ))}
+          </ul>
+        </>
       )}
     </RecipeContainer>
   );

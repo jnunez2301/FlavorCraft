@@ -29,14 +29,14 @@ const RecipeBook = () => {
       backgroundColor: "var(--bg-color)",
     }}>
       <header>
-        <h1
+        <h2
           style={{
             marginBottom: ".6rem",
             fontSize: "1.8rem",
           }}
         >
           Cooking Recipes
-        </h1>
+        </h2>
         <p
           style={{
             marginBottom: "1rem",

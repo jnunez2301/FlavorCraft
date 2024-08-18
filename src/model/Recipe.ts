@@ -5,9 +5,9 @@ export type Recipe = {
   description: string;
   category: string;
   typeOfCuisine: string;
-  caloriesPerServing: number;
-  servings: number;
-  prepTime: number;
+  caloriesPerServing: number | string;
+  servings: number | string;
+  prepTime: number | string;
   ingredients: string[];
   sauceInstructions?: string[];
   instructions: string[];

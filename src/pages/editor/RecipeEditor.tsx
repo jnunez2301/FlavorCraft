@@ -114,9 +114,9 @@ const NewRecipe = ({
     description: "",
     category: "",
     typeOfCuisine: "",
-    caloriesPerServing: 0,
-    servings: 0,
-    prepTime: 0,
+    caloriesPerServing: '',
+    servings: '',
+    prepTime: '',
     ingredients: [],
     sauceInstructions: [],
     instructions: [],
@@ -165,9 +165,9 @@ const NewRecipe = ({
     setSideDishes(initialValues.sideDishesRecommendations || []);
     setSauceInstructions(initialValues.sauceInstructions || []);
     setBackgroundImageName(initialValues.backgroundImg || "");
-    setCaloriesPerServing(initialValues.caloriesPerServing || 0);
-    setServings(initialValues.servings || 0);
-    setPrepTime(initialValues.prepTime || 0);
+    setCaloriesPerServing(+initialValues.caloriesPerServing || 0);
+    setServings(+initialValues.servings || 0);
+    setPrepTime(+initialValues.prepTime || 0);
   }, [initialValues]);
   const handleSubmit = (values: typeof initialValues) => {
     if (recipeId) {
@@ -311,7 +311,7 @@ const NewRecipe = ({
             justifyContent: "space-between",
           }}
         >
-          <Back />
+          <Back pathToGoBack={recipeId ? '/' : '..'} />
           <div
             id="control-buttons"
             style={{
@@ -370,7 +370,6 @@ const NewRecipe = ({
             <InvisibleInput
               placeholder="Prep time"
               $size="medium"
-              type="number"
               value={prepTime}
               onChange={(event) => {
                 form.setFieldValue("prepTime", +event.target.value)
@@ -682,7 +681,6 @@ const NewRecipe = ({
                 <InvisibleInput
                   placeholder="Calories per serving"
                   $size="medium"
-                  type="number"
                   value={caloriesPerServing}
                   onChange={(event) => {
                     form.setFieldValue("caloriesPerServing", +event.target.value)
@@ -698,7 +696,6 @@ const NewRecipe = ({
                 <InvisibleInput
                   placeholder="Servings"
                   $size="medium"
-                  type="number"
                   value={servings}
                   onChange={(event) =>{                    
                     form.setFieldValue("servings", +event.target.value)

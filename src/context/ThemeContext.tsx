@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-refresh/only-export-components */
 import React, { PropsWithChildren, useEffect } from "react";
 import Theme from "../theme/Theme";
@@ -25,26 +26,40 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [theme, setTheme] = React.useState<ThemeType>(ThemeType.Light);
+  const [theme, setThemeState] = React.useState<ThemeType>(ThemeType.Light);
+
+  // Update theme both in state and local storage
+  const setTheme = (newTheme: ThemeType) => {
+    setThemeState(newTheme);
+    localStorage.setItem("preferred-theme", newTheme);
+  };
 
   // Function to handle the theme change based on system preferences
   const handleThemeChange = (e: MediaQueryListEvent) => {
-    setTheme(e.matches ? ThemeType.Dark : ThemeType.Light);
+    const newTheme = e.matches ? ThemeType.Dark : ThemeType.Light;
+    setTheme(newTheme);
   };
 
   useEffect(() => {
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+    // Retrieve the theme from local storage, if available
+    const storedTheme = localStorage.getItem("preferred-theme") as ThemeType | null;
 
-    // Set the initial theme based on user preference
-    setTheme(prefersDarkMode.matches ? ThemeType.Dark : ThemeType.Light);
+    if (storedTheme) {
+      setThemeState(storedTheme);
+    } else {
+      const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+      
+      // Set the initial theme based on user preference
+      setThemeState(prefersDarkMode.matches ? ThemeType.Dark : ThemeType.Light);
 
-    // Listen for changes in the user's color scheme preference
-    prefersDarkMode.addEventListener("change", handleThemeChange);
+      // Listen for changes in the user's color scheme preference
+      prefersDarkMode.addEventListener("change", handleThemeChange);
 
-    // Clean up the event listener on component unmount
-    return () => {
-      prefersDarkMode.removeEventListener("change", handleThemeChange);
-    };
+      // Clean up the event listener on component unmount
+      return () => {
+        prefersDarkMode.removeEventListener("change", handleThemeChange);
+      };
+    }
   }, []);
 
   const values = {

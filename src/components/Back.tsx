@@ -2,15 +2,17 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import FancyButton from "./FancyButton";
 
+type BackProps = {
+  pathToGoBack?: string;
+};
 
-
-const Back = () => {
+const Back = ({ pathToGoBack }: BackProps) => {
   const navigate = useNavigate();
   const currentPath = window.location.pathname;
   const handleGoBack = () => {
     navigate({
       from: currentPath,
-      to: "..",
+      to: pathToGoBack ? pathToGoBack : "..",
     });
   };
   return (
