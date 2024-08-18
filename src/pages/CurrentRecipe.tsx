@@ -21,7 +21,6 @@ const RecipeContainer = styled.section`
   align-items: center;
   margin: 0 auto;
   border: 1px solid var(--theme-white);
-  padding: 2rem;
   height: 85vh;
   width: 100%;
   max-width: 1024px;
@@ -29,12 +28,11 @@ const RecipeContainer = styled.section`
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--accent-color) var(--bg-color);
-
+  ul {
+    list-style-type: none;
+  }
   @media (max-width: 768px) {
     padding: 1.5rem;
-    ul {
-      list-style-type: none;
-    }
   }
 
   @media (max-width: 480px) {
@@ -104,7 +102,7 @@ const IngredientsList = styled.ul`
 const InstructionsList = styled.ul`
   width: 100%;
   padding-left: 1rem;
-
+  padding-bottom: 1rem;
   @media (max-width: 1024px) {
     width: 100%;
   }
@@ -113,18 +111,21 @@ const InstructionsList = styled.ul`
     padding-left: 0;
   }
 `;
-
+const RecipeImage = styled.div<{$backgroundImg?: string}>`
+  background-image: url(${(props) => props.$backgroundImg || "/soup.svg"});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 300px;
+  margin-bottom: 1rem;
+`;
+  
 const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
   return (
     <RecipeContainer id="current-recipe">
       <Header>
-        <img
-          src={currentRecipe.backgroundImg}
-          alt={`Image of ${currentRecipe.title}`}
-          onError={(e) => {
-            e.currentTarget.src = "/soup.svg";
-          }}
-        />
+        <RecipeImage $backgroundImg={currentRecipe.backgroundImg} />
         <div>
           {currentRecipe.title ? (
             <Title>{currentRecipe.title}</Title>

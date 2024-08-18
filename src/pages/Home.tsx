@@ -17,7 +17,6 @@ export const Home = () => {
   const { clearUserSession, userSession } = useSession();
   const { getApi } = useResolveApi();
   const handleThemeChange = (theme: ThemeType) => {
-    console.log("Theme changed to", theme);
     setTheme(theme);
   };
   const handleMenu = () => {

@@ -24,6 +24,7 @@ import CurrentRecipe from "../CurrentRecipe";
 import { useSession } from "../../auth/SessionContext";
 import Loader from "../../components/Loader";
 import { useNavigate } from "@tanstack/react-router";
+import fileToBase64 from "../../util/fileToBase64";
 
 const RecipeSchema = z.object({
   userId: z.string({
@@ -94,7 +95,7 @@ const RecipeSchema = z.object({
     )
     .optional(),
   backgroundImg: z
-    .string({
+    .any({
       message: "Background image is required",
     })
     .optional(),
@@ -121,7 +122,6 @@ const NewRecipe = ({
     sauceInstructions: [],
     instructions: [],
     sideDishesRecommendations: [],
-    backgroundImg: "",
   });
   const form = useForm({
     mode: "controlled",
@@ -149,7 +149,7 @@ const NewRecipe = ({
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [currentSideDish, setCurrentSideDish] = useState<string>("");
   const [sideDishes, setSideDishes] = useState<string[]>([]);
-  const [backgroundImageName, setBackgroundImageName] = useState<string>("");
+  const [, setBackgroundImg] = useState<string | File>('');
   const [currentSauceInstruction, setCurrentSauceInstruction] = useState<string>("");
   const [sauceInstructions, setSauceInstructions] = useState<string[]>([]);
   const [currentRecipe, setCurrentRecipe] = useState<Recipe>(initialValues);
@@ -164,10 +164,10 @@ const NewRecipe = ({
     setIngredients(initialValues.ingredients || []);
     setSideDishes(initialValues.sideDishesRecommendations || []);
     setSauceInstructions(initialValues.sauceInstructions || []);
-    setBackgroundImageName(initialValues.backgroundImg || "");
-    setCaloriesPerServing(+initialValues.caloriesPerServing || 0);
-    setServings(+initialValues.servings || 0);
-    setPrepTime(+initialValues.prepTime || 0);
+    setBackgroundImg(initialValues.backgroundImg || "");
+    setCaloriesPerServing(+initialValues.caloriesPerServing || 1);
+    setServings(+initialValues.servings || 1);
+    setPrepTime(+initialValues.prepTime || 1);
   }, [initialValues]);
   const handleSubmit = (values: typeof initialValues) => {
     if (recipeId) {
@@ -189,7 +189,7 @@ const NewRecipe = ({
             setIngredients([]);
             setSideDishes([]);
             setSauceInstructions([]);
-            setBackgroundImageName("");
+            setBackgroundImg("");
             navigate({
               to: "/",
             });
@@ -268,11 +268,19 @@ const NewRecipe = ({
       return newList;
     });
   };
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setBackgroundImageName(file.name);
-      form.setFieldValue("backgroundImg", file.name); // Store file name or handle file upload accordingly
+      try {
+        const base64File = await fileToBase64(file);
+        setBackgroundImg(base64File); // Store base64 string
+        form.setFieldValue("backgroundImg", base64File); // Set base64 string in form
+      } catch (error) {
+        console.error("Error converting file to base64", error);
+      }
+    } else {
+      setBackgroundImg("");
+      form.setFieldValue("backgroundImg", "");
     }
   };
   useEffect(() => {
@@ -714,7 +722,6 @@ const NewRecipe = ({
             accept="image/*"
             onChange={handleFileChange} // Set file name on change
           />
-          {backgroundImageName && <p>Selected file: {backgroundImageName}</p>}
         </div>
       </form>
       {isPreview && currentRecipe ? (
