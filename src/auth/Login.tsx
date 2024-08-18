@@ -83,7 +83,7 @@ export const Login = () => {
         />
       </div>
       <p>
-        Don't have an account? <Link to="/auth/register">register</Link>
+        Don't have an account? <Link to="/auth/register">Register</Link>
       </p>
       <Button type="submit">Login</Button>
     </Form>

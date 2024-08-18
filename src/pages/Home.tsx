@@ -20,7 +20,6 @@ export const Home = () => {
     console.log("Theme changed to", theme);
     setTheme(theme);
   };
-  console.log("look at me");
   const handleMenu = () => {
     setShowMenu(!showMenu);
   };

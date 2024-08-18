@@ -294,6 +294,7 @@ const NewRecipe = ({
       style={{
         padding: "1rem",
         position: "relative",
+        
       }}
     >
       <form

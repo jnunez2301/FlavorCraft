@@ -10,6 +10,7 @@ import FancyButton from "../../components/FancyButton";
 import { IconDownload, IconEdit, IconFileMinus } from "@tabler/icons-react";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
+import useMedia from "use-media";
 
 const RecipeById = () => {
   const { recipeId } = useParams({
@@ -38,6 +39,8 @@ const RecipeById = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  const isMobile = useMedia({ maxWidth: "768px"});
+  const isTablet = useMedia({ maxWidth: "1024px", minWidth: "769px" });
   return (
     <section
       style={{
@@ -50,7 +53,6 @@ const RecipeById = () => {
         id="recipe-nav"
         style={{
           display: "flex",
-          justifyContent: "justify-between",
           gap: "1rem",
           padding: "1rem",
           marginBottom: ".5rem",
@@ -75,15 +77,15 @@ const RecipeById = () => {
             }}
           >
             <IconEdit size={20} />
-            Edit
+            {isMobile || isTablet ? "" : "Edit"}
           </FancyButton>
           <FancyButton onClick={() => handleOpenModal()}>
             <IconFileMinus size={20} />
-            Delete
+            {isMobile || isTablet ? "" : "Delete"}
           </FancyButton>
           <FancyButton>
             <IconDownload size={20} />
-            Download
+            {isMobile || isTablet ? "" : "Download"}
           </FancyButton>
         </div>
       </nav>

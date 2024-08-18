@@ -18,80 +18,127 @@ const RecipeContainer = styled.section`
   flex-direction: column;
   background-color: var(--bg-color);
   gap: 0.3rem;
-  align-items: end;
+  align-items: center;
   margin: 0 auto;
   border: 1px solid var(--theme-white);
-  padding: 3rem;
+  padding: 2rem;
   height: 85vh;
-  width: fit-content;
+  width: 100%;
+  max-width: 1024px;
   position: relative;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--accent-color) var(--bg-color);
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    ul {
+      list-style-type: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+    ul {
+      list-style-type: none;
+    }
+  }
+`;
+
+const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  width: 100%;
+
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    max-width: 400px; /* Optional: Limit max width */
+  }
+`;
+
+const Title = styled.h1`
+  margin: 0;
+  font-size: 1.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
+`;
+
+const Description = styled.p`
+  width: 100%;
+  max-width: 25rem;
+  margin: 0;
+`;
+
+const BadgeContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  @media (max-width: 480px) {
+    gap: 0.5rem;
+  }
+`;
+
+const IngredientsList = styled.ul`
+  width: 100%;
+  padding-left: 1rem;
+
+  @media (max-width: 768px) {
+    padding-left: 0;
+  }
+`;
+
+const InstructionsList = styled.ul`
+  width: 100%;
+  padding-left: 1rem;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 0;
+  }
 `;
 
 const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
   return (
     <RecipeContainer id="current-recipe">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          textAlign: "right",
-          gap: "1rem",
-        }}
-      >
+      <Header>
         <img
           src={currentRecipe.backgroundImg}
           alt={`Image of ${currentRecipe.title}`}
-          style={{
-            width: "10rem",
-            height: "auto",
-          }}
           onError={(e) => {
             e.currentTarget.src = "/soup.svg";
           }}
         />
         <div>
           {currentRecipe.title ? (
-            <h1>{currentRecipe.title}</h1>
+            <Title>{currentRecipe.title}</Title>
           ) : (
-            <h2>Recipe Title</h2>
+            <Title>Recipe Title</Title>
           )}
           {currentRecipe.description ? (
-            <p
-              style={{
-                width: "25rem",
-              }}
-            >
-              {currentRecipe.description}
-            </p>
+            <Description>{currentRecipe.description}</Description>
           ) : (
-            <p>Recipe Description</p>
+            <Description>Recipe Description</Description>
           )}
         </div>
-      </div>
-      {/* <img
-        src={currentRecipe.backgroundImg}
-        alt={`Image of ${currentRecipe.title}`}
-        style={{
-          width: "10rem",
-          height: "auto",
-          position: "absolute",
-          top: "2rem",
-          left: "3rem",
-        }}
-        onError={(e) => {
-          e.currentTarget.src = "/soup.svg";
-        }}
-      /> */}
-      <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          margin: "1rem 0",
-        }}
-      >
+      </Header>
+      <BadgeContainer>
         {currentRecipe.category ? (
           <Badge>
             <IconCategory size={20} />
@@ -132,37 +179,37 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
         ) : (
           <Badge>Prep Time</Badge>
         )}
-      </div>
+      </BadgeContainer>
       <h2>Ingredients</h2>
-      <ul>
-        {currentRecipe.ingredients.map((instruction, index) => (
-          <li key={index}>{instruction}</li>
+      <IngredientsList>
+        {currentRecipe.ingredients.map((ingredient, index) => (
+          <li key={index}>{ingredient}</li>
         ))}
-      </ul>
+      </IngredientsList>
       <h2>Instructions</h2>
-      <ul>
+      <InstructionsList>
         {currentRecipe.instructions.map((instruction, index) => (
           <li key={index}>{instruction}</li>
         ))}
-      </ul>
+      </InstructionsList>
       {currentRecipe.sauceInstructions && (
         <>
           <h2>Sauce</h2>
-          <ul>
+          <InstructionsList>
             {currentRecipe.sauceInstructions.map((sauce, index) => (
               <li key={index}>{sauce}</li>
             ))}
-          </ul>
+          </InstructionsList>
         </>
       )}
       {currentRecipe.sideDishesRecommendations && (
         <>
           <h2>Side Dishes</h2>
-          <ul>
+          <InstructionsList>
             {currentRecipe.sideDishesRecommendations.map((sideDish, index) => (
               <li key={index}>{sideDish}</li>
             ))}
-          </ul>
+          </InstructionsList>
         </>
       )}
     </RecipeContainer>

@@ -117,7 +117,7 @@ export const Register = () => {
         />
       </div>
       <p>
-        Already have an account? <Link to="/auth">sign in</Link>
+        Already have an account? <Link to="/auth">Sign in</Link>
       </p>
       <Button type="submit">Register</Button>
     </Form>
