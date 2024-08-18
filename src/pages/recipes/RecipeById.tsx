@@ -11,7 +11,9 @@ import {
   IconDownload,
   IconEdit,
   IconFileMinus,
+  IconKeyboardHide,
   IconShare,
+  IconShareOff,
 } from "@tabler/icons-react";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
@@ -48,15 +50,18 @@ const RecipeById = () => {
     }
     setIsShareModalOpen(true);
   };
-  const handleAgreeShare = () => {
+  const handleShareChange = () => {
+    const statusChange = recipe?.publicRecipe ? false : true;
     updateApi(`recipes/${recipeId}/user/${userSession?._id}`, {
-      publicRecipe: true,
+      publicRecipe: statusChange,
     })
     .then((response) => {
       if (response?.success) {
-        toast.success("Recipe is now public and copied link to clipboard");
+        toast.success(response.message, {
+          id: "share-success",
+        });
         navigator.clipboard.writeText(`${window.location.origin}/${recipeId}`);
-        window.location.reload();
+        setTimeout(() => window.location.reload(), 1000);
       }
     })
     .catch((err) => console.error(err));
@@ -120,6 +125,12 @@ const RecipeById = () => {
                 <IconShare size={20} />
                 {isMobile || isTablet ? "" : "Share"}
               </FancyButton>
+              <FancyButton style={{
+                display: recipe?.publicRecipe ? "flex" : "none"
+              }}  onClick={() => handleShareChange()}>
+                <IconShareOff />
+                {isMobile || isTablet ? "" : "Private"}
+              </FancyButton>
             </>
           ) : null}
           <FancyButton>
@@ -141,7 +152,7 @@ const RecipeById = () => {
           justifyContent: "space-around",
           marginTop: "3rem",
         }}>
-        <Button $variant="danger" onClick={() => handleAgreeShare()}>Yes</Button>
+        <Button $variant="danger" onClick={() => handleShareChange()}>Yes</Button>
         <Button onClick={handleCloseShareModal}>No</Button>
         </div>
       </Modal>
