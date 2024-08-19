@@ -18,6 +18,7 @@ import Modal from "../../components/Modal";
 import Button from "../../components/Button";
 import useMedia from "use-media";
 import toast from "react-hot-toast";
+import { apiUrl } from "../../util/environment";
 
 const RecipeById = () => {
   const { recipeId } = useParams({
@@ -72,6 +73,28 @@ const RecipeById = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  const handleDownloadPdf = () => {
+    fetch(`${apiUrl}recipes/${recipeId}/user/${userSession?._id}/pdf`, {
+      credentials: "include",
+      method: "GET",
+      headers: {
+        "Content-Type": "application/pdf",
+      },
+    })
+    .then(response => {
+      if(response.ok) {
+        response.blob().then(blob => {
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `${recipe?.title}.pdf`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+      })}})
+    .catch(err => console.error(err));  
+  }
   const isMobile = useMedia({ maxWidth: "768px" });
   const isTablet = useMedia({ maxWidth: "1024px", minWidth: "769px" });
   return (
@@ -130,7 +153,7 @@ const RecipeById = () => {
               </FancyButton>
             </>
           ) : null}
-          <FancyButton>
+          <FancyButton onClick={handleDownloadPdf}>
             <IconDownload size={20} />
             {isMobile || isTablet ? "" : "Download"}
           </FancyButton>
