@@ -96,7 +96,15 @@ const BadgeContainer = styled.div`
 const IngredientsList = styled.ul`
   width: 100%;
   padding-left: 1rem;
-
+  display: grid;
+  gap: 1.3rem;
+  li{
+    cursor: pointer;
+    width: fit-content;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
   @media (max-width: 768px) {
     padding-left: 0;
   }
@@ -125,6 +133,17 @@ const RecipeImage = styled.div<{$backgroundImg?: string}>`
 `;
   
 const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
+  /* const [isHovered, setIsHovered] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleHover = (query: string) => {
+    setSearchQuery(query);
+    setIsHovered(true);
+  }
+  const handleLeave = () => {
+    setIsHovered(false);
+    setSearchQuery("");
+  } */
+
   return (
     <RecipeContainer id="current-recipe">
       <Header>
@@ -147,6 +166,7 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
           <Badge>
             <IconCategory size={20} />
             {currentRecipe.category}
+            
           </Badge>
         ) : (
           <Badge>Category</Badge>
@@ -186,6 +206,7 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
       </BadgeContainer>
       <h2>Ingredients</h2>
       <IngredientsList>
+        {/* {searchQuery && searchQuery.length > 0 && <IngredientHover searchQuery={searchQuery} showImages={isHovered} />} */}
         {currentRecipe.ingredients.map((ingredient, index) => (
           <li key={index}>{ingredient}</li>
         ))}
