@@ -8,10 +8,13 @@ import {
   IconStopwatch,
   IconUsersGroup,
 } from "@tabler/icons-react";
+import { fadeIn } from "../util/animation";
 
 type CurrentRecipeProps = {
   currentRecipe: Recipe;
 };
+
+
 
 const RecipeContainer = styled.section`
   display: flex;
@@ -28,6 +31,7 @@ const RecipeContainer = styled.section`
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--accent-color) var(--bg-color);
+  animation: ${fadeIn} 0.3s ease-in-out;
   ul {
     list-style-type: none;
   }
@@ -62,7 +66,6 @@ const Header = styled.header`
 const Title = styled.h1`
   margin: 0;
   font-size: 1.5rem;
-
   @media (max-width: 768px) {
     font-size: 1.25rem;
   }

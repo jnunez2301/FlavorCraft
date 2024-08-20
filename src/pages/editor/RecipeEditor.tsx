@@ -25,6 +25,15 @@ import { useSession } from "../../auth/SessionContext";
 import Loader from "../../components/Loader";
 import { useNavigate } from "@tanstack/react-router";
 import fileToBase64 from "../../util/fileToBase64";
+import styled from "@emotion/styled";
+import { fadeIn } from "../../util/animation";
+const EditorContainer = styled.section`
+  padding: 1rem;
+  position: relative;
+  form {
+    animation: ${fadeIn} 0.3s ease-in-out;
+  }
+`;
 
 const RecipeSchema = z.object({
   userId: z.string({
@@ -115,9 +124,9 @@ const NewRecipe = ({
     description: "",
     category: "",
     typeOfCuisine: "",
-    caloriesPerServing: '',
-    servings: '',
-    prepTime: '',
+    caloriesPerServing: "",
+    servings: "",
+    prepTime: "",
     ingredients: [],
     sauceInstructions: [],
     instructions: [],
@@ -149,8 +158,9 @@ const NewRecipe = ({
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [currentSideDish, setCurrentSideDish] = useState<string>("");
   const [sideDishes, setSideDishes] = useState<string[]>([]);
-  const [, setBackgroundImg] = useState<string | File>('');
-  const [currentSauceInstruction, setCurrentSauceInstruction] = useState<string>("");
+  const [, setBackgroundImg] = useState<string | File>("");
+  const [currentSauceInstruction, setCurrentSauceInstruction] =
+    useState<string>("");
   const [sauceInstructions, setSauceInstructions] = useState<string[]>([]);
   const [currentRecipe, setCurrentRecipe] = useState<Recipe>(initialValues);
   const [isPreview, setIsPreview] = useState<boolean>(false);
@@ -268,7 +278,9 @@ const NewRecipe = ({
       return newList;
     });
   };
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       try {
@@ -296,15 +308,9 @@ const NewRecipe = ({
     gap: "1rem",
   };
   const iconSize = 34;
+
   return (
-    <section
-      id="recipe-editor"
-      style={{
-        padding: "1rem",
-        position: "relative",
-        
-      }}
-    >
+    <EditorContainer id="recipe-editor">
       <form
         style={{ position: "relative" }}
         onSubmit={form.onSubmit(handleSubmit, zodValidationErrors)}
@@ -320,7 +326,7 @@ const NewRecipe = ({
             justifyContent: "space-between",
           }}
         >
-          <Back pathToGoBack={recipeId ? '/' : '..'} />
+          <Back pathToGoBack={recipeId ? "/" : ".."} />
           <div
             id="control-buttons"
             style={{
@@ -381,10 +387,10 @@ const NewRecipe = ({
               $size="medium"
               value={prepTime}
               onChange={(event) => {
-                form.setFieldValue("prepTime", +event.target.value)
-                setPrepTime(Number(event.target.value))
+                form.setFieldValue("prepTime", +event.target.value);
+                setPrepTime(Number(event.target.value));
               }}
-              />
+            />
             <p>Minutes</p>
           </div>
           <aside>
@@ -692,8 +698,11 @@ const NewRecipe = ({
                   $size="medium"
                   value={caloriesPerServing}
                   onChange={(event) => {
-                    form.setFieldValue("caloriesPerServing", +event.target.value)
-                    setCaloriesPerServing(Number(event.target.value))
+                    form.setFieldValue(
+                      "caloriesPerServing",
+                      +event.target.value
+                    );
+                    setCaloriesPerServing(Number(event.target.value));
                   }}
                 />
               </div>
@@ -706,9 +715,9 @@ const NewRecipe = ({
                   placeholder="Servings"
                   $size="medium"
                   value={servings}
-                  onChange={(event) =>{                    
-                    form.setFieldValue("servings", +event.target.value)
-                    setServings(Number(event.target.value))
+                  onChange={(event) => {
+                    form.setFieldValue("servings", +event.target.value);
+                    setServings(Number(event.target.value));
                   }}
                   required
                 />
@@ -727,7 +736,7 @@ const NewRecipe = ({
       {isPreview && currentRecipe ? (
         <CurrentRecipe currentRecipe={currentRecipe} />
       ) : null}
-    </section>
+    </EditorContainer>
   );
 };
 
