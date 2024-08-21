@@ -63,7 +63,7 @@ const Header = styled.header`
   }
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   margin: 0;
   font-size: 1.5rem;
   @media (max-width: 768px) {
@@ -131,7 +131,10 @@ const RecipeImage = styled.div<{$backgroundImg?: string}>`
   height: 300px;
   margin-bottom: 1rem;
 `;
-  
+const SubTitle = styled.h2`
+  padding-left: 1rem;
+  margin-bottom: .5rem;
+`
 const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
   /* const [isHovered, setIsHovered] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -204,14 +207,14 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
           <Badge>Prep Time</Badge>
         )}
       </BadgeContainer>
-      <h2>Ingredients</h2>
+      <SubTitle>Ingredients</SubTitle>
       <IngredientsList>
         {/* {searchQuery && searchQuery.length > 0 && <IngredientHover searchQuery={searchQuery} showImages={isHovered} />} */}
         {currentRecipe.ingredients.map((ingredient, index) => (
           <li key={index}>{ingredient}</li>
         ))}
       </IngredientsList>
-      <h2>Instructions</h2>
+      <SubTitle>Instructions</SubTitle>
       <InstructionsList>
         {currentRecipe.instructions.map((instruction, index) => (
           <li key={index}>{instruction}</li>
@@ -219,7 +222,7 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
       </InstructionsList>
       {currentRecipe.sauceInstructions && (
         <>
-          <h2>Sauce</h2>
+          <SubTitle>Sauce</SubTitle>
           <InstructionsList>
             {currentRecipe.sauceInstructions.map((sauce, index) => (
               <li key={index}>{sauce}</li>
@@ -229,7 +232,7 @@ const CurrentRecipe = ({ currentRecipe }: CurrentRecipeProps) => {
       )}
       {currentRecipe.sideDishesRecommendations && (
         <>
-          <h2>Side Dishes</h2>
+          <SubTitle>Side Dishes</SubTitle>
           <InstructionsList>
             {currentRecipe.sideDishesRecommendations.map((sideDish, index) => (
               <li key={index}>{sideDish}</li>

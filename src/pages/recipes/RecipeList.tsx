@@ -3,6 +3,12 @@ import { Recipe } from "../../model/Recipe";
 import styled from "@emotion/styled";
 import { useNavigate } from "@tanstack/react-router";
 import Loader from "../../components/Loader";
+import Badge from "../../components/Badge";
+import {
+  IconCategory,
+  IconDumpling,
+} from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 
 const RecipeSection = styled.section`
   display: grid;
@@ -13,60 +19,104 @@ const RecipeSection = styled.section`
   align-items: center;
   cursor: pointer;
 `;
-
 const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
   const navigate = useNavigate();
+  const initialFilter = recipes;
+  const [categories, setCategories] = useState<string[] | null>([]);
+  const [cousine, setCousine] = useState<string[] | null>([]);
+  const [currentRecipes, setCurrentRecipes] = useState<Recipe[]>(initialFilter);
+  const [filter, setFilter] = useState<string | null>(null);
+  useEffect(() => {
+    if(recipes){
+      setCategories(recipes.map((recipe) => recipe.category));
+      setCousine(recipes.map((recipe) => recipe.typeOfCuisine));
+      setCurrentRecipes(recipes);
+    }
+  }, [recipes])
   if (!recipes) {
     return <Loader />;
   }
-  if(recipes.length === 0) {
-    return <p>No recipes found</p>
+  if (recipes.length === 0) {
+    return <p>No recipes found</p>;
   }
+  const handleBadgeFilter = (query: string) => {
+    if(query === filter){
+      setFilter(null);
+      setCurrentRecipes(recipes);
+      return;
+    }
+    setFilter(query);
+    setCurrentRecipes(recipes.filter((recipe) => recipe.category === query || recipe.typeOfCuisine === query));
+  };
   return (
-    <RecipeSection>
-      {recipes.map((recipe) => (
+    <>
+    <div style={{
+      display: "flex",
+      gap: ".5rem",
+      padding: ".5rem",
+    }}>
+      {cousine && cousine.map((cousine) => <Badge $isActive={filter === cousine} key={cousine} onClick={() => handleBadgeFilter(cousine)}><IconDumpling />{cousine}</Badge>)}
+      {categories && categories.map((category) => <Badge $isActive={filter === category} key={category} onClick={() => handleBadgeFilter(category)}><IconCategory/>{category}</Badge>)}
+      </div>
+    <RecipeSection id="recipe-list">
+      
+      {currentRecipes.map((recipe) => (
+        <div
+          key={recipe._id}
+          className={css({
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: ".3rem",
+            height: "100%",
+            transition: "all 0.2s ease-in",
+            border: "1px solid var(--info-color)",
+            ":hover": {
+              color: "var(--accent-color)",
+              boxShadow: "10px 10px 0px var(--accent-color)",
+            },
+          })}
+          onClick={() => {
+            navigate({
+              to: `/${recipe._id}`,
+            });
+          }}
+        >
           <article
-            key={recipe._id}
             className={css({
               minHeight: "310px",
               height: "100%",
-              display: "grid",
-              padding: "1rem",
-              justifyItems: "center",
-              alignContent: "space-between",
-              border: "1px solid var(--info-color)",
-              transition: "all 0.2s ease-in",
-              textAlign: "center",
-              ":hover": {
-                color: "var(--accent-color)",
-                boxShadow: "10px 10px 0px var(--accent-color)",
-              },
+              backgroundImage: `url(${recipe.backgroundImg})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              width: "100%",
             })}
-            onClick={() => {
-              navigate({
-                to: `/${recipe._id}`,
-              })
+          ></article>
+          <h2 style={{ padding: ".5rem" }}>{recipe.title}</h2>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: ".5rem",
+              padding: ".5rem",
             }}
           >
-            <h2>{recipe.title}</h2>
-            <img
-              style={{
-                minWidth: "200px",
-                width: "100%",
-                maxWidth: "300px",
-                height: "auto",
-                marginBottom: "1rem",
-              }}
-              src={recipe.backgroundImg}
-              onError={(e) => {
-                e.currentTarget.src = "/soup.svg";
-              }}
-              alt={`Image of ${recipe.title}`}
-              />
-              <p>{recipe.description}</p>
-          </article>
-        ))}
+            <Badge>
+              <IconCategory />
+              {recipe.category}
+            </Badge>
+            <Badge>
+              <IconDumpling />
+              {recipe.typeOfCuisine}
+            </Badge>
+          </div>
+          <p style={{ padding: ".5rem" }}>{recipe.description}</p>
+        </div>
+      ))}
     </RecipeSection>
+    </>
   );
 };
 
