@@ -74,11 +74,13 @@ const RecipeById = () => {
     setIsModalOpen(false);
   };
   const handleDownloadPdf = () => {
+    const flavorCraftSession = localStorage.getItem("flavorcraft-session");
     fetch(`${apiUrl}recipes/${recipeId}/user/${userSession?._id}/pdf`, {
       credentials: "include",
       method: "GET",
       headers: {
         "Content-Type": "application/pdf",
+        Authorization: `Bearer ${flavorCraftSession}`,
       },
     })
     .then(response => {
