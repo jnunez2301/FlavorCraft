@@ -53,6 +53,8 @@ export const Login = () => {
             to: "/",
           });
           setUserSession(currentUser);
+          // @ts-expect-error: Token will always be present if success is true on login
+          localStorage.setItem("flavorcraft-session", response.token);
           form.reset();
         }
       })

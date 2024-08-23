@@ -5,32 +5,48 @@ import { apiUrl } from "../util/environment";
 import ApiResponse from "../model/ApiResponse";
 import { useSession } from "../auth/SessionContext";
 import { useNavigate } from "@tanstack/react-router";
+import { StatusCodes } from "http-status-codes";
 
 export const useResolveApi = () => {
   const { clearUserSession } = useSession();
   const navigate = useNavigate();
+  const flavorcraftSession = localStorage.getItem("flavorcraft-session");
+  function clearSession() {
+    setTimeout(() => {
+      clearUserSession();
+      navigate({
+        to: "/auth",
+      });
+    }, 3000);
+  }
   /**
    * Get data from the API with credentials
    * You don't need to pass the full URL, just the endpoint
    * @param endpoint The endpoint to fetch from the API
    * @example getApi("recipes")
-   *  */ 
+   *  */
   async function getApi(endpoint: string) {
     try {
       const response = await fetch(`${apiUrl}${endpoint}`, {
         credentials: "include",
+        headers: {
+          Authorization: `Bearer ${flavorcraftSession}`,
+        },
       });
       const data: ApiResponse = await response.json();
       if (!response.ok) {
-        if (response.status === 401) {
-          clearUserSession();
+        if (response.status === StatusCodes.FORBIDDEN) {
+          clearSession();
         }
-        let errorMessage = data ? data.message : "There was an error trying to reach the server";
-        if(data.message.toLowerCase().split(" ").includes("token")) errorMessage = "You must be logged in to access this page";
-        toast.error(errorMessage,{id: "api-error",});
+        let errorMessage = data
+          ? data.message
+          : "There was an error trying to reach the server";
+        if (data.message.toLowerCase().split(" ").includes("token"))
+          errorMessage = "You must be logged in to access this page";
+        toast.error(errorMessage, { id: "api-error" });
         navigate({
-          to: '..'
-        })
+          to: "..",
+        });
         return;
       }
       return data;
@@ -48,20 +64,23 @@ export const useResolveApi = () => {
    * @example postApi("recipes", {title: "Recipe title"})
    * @param endpoint The endpoint to post to the API
    * @param data The data to send to the API
-  */
+   */
   async function postApi(endpoint: string, data: any) {
     try {
       const response = await fetch(`${apiUrl}${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${flavorcraftSession}`,
         },
         credentials: "include",
         body: JSON.stringify(data),
       });
       const responseData: ApiResponse = await response.json();
       if (!response.ok) {
-        if (response.status === 401) clearUserSession();
+        if (response.status === StatusCodes.FORBIDDEN) {
+          clearSession();
+        }
         toast.error(responseData.message);
       }
       if (responseData.success) {
@@ -89,13 +108,16 @@ export const useResolveApi = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${flavorcraftSession}`,
         },
         credentials: "include",
         body: JSON.stringify(data),
       });
       const responseData: ApiResponse = await response.json();
       if (!response.ok) {
-        if (response.status === 401) clearUserSession();
+        if (response.status === StatusCodes.FORBIDDEN) {
+          clearSession();
+        }
         toast.error(responseData.message);
       }
       if (responseData.success) {
@@ -121,16 +143,20 @@ export const useResolveApi = () => {
       const response = await fetch(`${apiUrl}${endpoint}`, {
         credentials: "include",
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${flavorcraftSession}`,
+        },
       });
       const data: ApiResponse = await response.json();
       if (!response.ok) {
-        if (response.status === 401) {
-          clearUserSession();
+        if (response.status === StatusCodes.FORBIDDEN) {
+          clearSession();
         }
         let errorMessage = "There was an error trying to reach the server";
-        if(data.message.toLowerCase().split(" ").includes("token")) errorMessage = "You must be logged in to access this page";
-        toast.error(errorMessage,{id: "api-error",});
-       
+        if (data.message.toLowerCase().split(" ").includes("token"))
+          errorMessage = "You must be logged in to access this page";
+        toast.error(errorMessage, { id: "api-error" });
+
         return;
       }
       return data;
@@ -146,7 +172,7 @@ export const useResolveApi = () => {
    * Handle Zod validation errors
    * @param errors The errors object from Zod
    * @example zodValidationErrors(errors)
-    */
+   */
   function zodValidationErrors(errors: FormErrors) {
     const zodErrors = Object.values(errors);
     console.log(errors);

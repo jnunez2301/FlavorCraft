@@ -4,7 +4,6 @@ import {
   createRouter,
   createRoute,
   createRootRoute,
-  useNavigate,
 } from "@tanstack/react-router";
 import { Home } from "../pages/Home";
 import { useSession } from "../auth/SessionContext";
@@ -22,7 +21,6 @@ const rootRoute = createRootRoute({
   component: () => {
     const { setUserSession } = useSession();
     const { getApi } = useResolveApi();
-    const navigate = useNavigate();
     useEffect(() => {
       const path = window.location.pathname;
       if (path.split("/").includes("auth")) return;
@@ -31,10 +29,6 @@ const rootRoute = createRootRoute({
           if (response?.success) {
             const currentUser = response.session as unknown as User;
             setUserSession(currentUser);
-          } else {
-            navigate({
-              to: "/auth",
-            });
           }
         })
         .catch((error) => {

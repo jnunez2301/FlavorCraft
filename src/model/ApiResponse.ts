@@ -5,6 +5,7 @@ type ApiResponse = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   message: any;
   session: User;
+  token?: string;
 }
 
 export default ApiResponse;

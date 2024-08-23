@@ -25,6 +25,7 @@ export const SessionProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const clearUserSession = () => {
     window.location.href = "/auth";
     setUserSession(null)
+    localStorage.removeItem("flavorcraft-session");
   };
   const values = {
     userSession,
