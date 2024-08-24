@@ -386,6 +386,8 @@ const NewRecipe = ({
               placeholder="Prep time"
               $size="medium"
               value={prepTime}
+              min={1}
+              type="number"
               onChange={(event) => {
                 form.setFieldValue("prepTime", +event.target.value);
                 setPrepTime(Number(event.target.value));
@@ -697,6 +699,8 @@ const NewRecipe = ({
                   placeholder="Calories per serving"
                   $size="medium"
                   value={caloriesPerServing}
+                  min={1}
+                  type="number"
                   onChange={(event) => {
                     form.setFieldValue(
                       "caloriesPerServing",
@@ -715,6 +719,8 @@ const NewRecipe = ({
                   placeholder="Servings"
                   $size="medium"
                   value={servings}
+                  type="number"
+                  min={1}
                   onChange={(event) => {
                     form.setFieldValue("servings", +event.target.value);
                     setServings(Number(event.target.value));
