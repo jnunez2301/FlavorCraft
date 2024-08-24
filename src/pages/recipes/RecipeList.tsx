@@ -4,10 +4,7 @@ import styled from "@emotion/styled";
 import { useNavigate } from "@tanstack/react-router";
 import Loader from "../../components/Loader";
 import Badge from "../../components/Badge";
-import {
-  IconCategory,
-  IconDumpling,
-} from "@tabler/icons-react";
+import { IconCategory, IconDumpling } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 const RecipeSection = styled.section`
@@ -18,6 +15,20 @@ const RecipeSection = styled.section`
   padding: 1rem 0;
   align-items: center;
   cursor: pointer;
+  @media (max-width: 767px) {
+    justify-content: center;
+  }
+`;
+const BadgeContainer = styled.div`
+  display: flex;
+  gap: .5rem;
+  padding: 0.5rem;
+  overflow-x: auto;
+  @media (max-width: 767px) {
+    flex-direction: column;
+    max-height: 200px;
+    overflow-y: auto;
+  }
 `;
 const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
   const navigate = useNavigate();
@@ -27,12 +38,12 @@ const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
   const [currentRecipes, setCurrentRecipes] = useState<Recipe[]>(initialFilter);
   const [filter, setFilter] = useState<string | null>(null);
   useEffect(() => {
-    if(recipes){
+    if (recipes) {
       setCategories(recipes.map((recipe) => recipe.category));
       setCousine(recipes.map((recipe) => recipe.typeOfCuisine));
       setCurrentRecipes(recipes);
     }
-  }, [recipes])
+  }, [recipes]);
   if (!recipes) {
     return <Loader />;
   }
@@ -40,82 +51,101 @@ const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
     return <p>No recipes found</p>;
   }
   const handleBadgeFilter = (query: string) => {
-    if(query === filter){
+    if (query === filter) {
       setFilter(null);
       setCurrentRecipes(recipes);
       return;
     }
     setFilter(query);
-    setCurrentRecipes(recipes.filter((recipe) => recipe.category === query || recipe.typeOfCuisine === query));
+    setCurrentRecipes(
+      recipes.filter(
+        (recipe) => recipe.category === query || recipe.typeOfCuisine === query
+      )
+    );
   };
   return (
     <>
-    <div style={{
-      display: "flex",
-      gap: ".5rem",
-      padding: ".5rem",
-    }}>
-      {cousine && cousine.map((cousine) => <Badge $isActive={filter === cousine} key={cousine} onClick={() => handleBadgeFilter(cousine)}><IconDumpling />{cousine}</Badge>)}
-      {categories && categories.map((category) => <Badge $isActive={filter === category} key={category} onClick={() => handleBadgeFilter(category)}><IconCategory/>{category}</Badge>)}
-      </div>
-    <RecipeSection id="recipe-list">
-      
-      {currentRecipes.map((recipe) => (
-        <div
-          key={recipe._id}
-          className={css({
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: ".3rem",
-            height: "100%",
-            transition: "all 0.2s ease-in",
-            border: "1px solid var(--info-color)",
-            ":hover": {
-              color: "var(--accent-color)",
-              boxShadow: "10px 10px 0px var(--accent-color)",
-            },
-          })}
-          onClick={() => {
-            navigate({
-              to: `/${recipe._id}`,
-            });
-          }}
-        >
-          <article
-            className={css({
-              minHeight: "310px",
-              height: "100%",
-              backgroundImage: `url(${recipe.backgroundImg})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              width: "100%",
-            })}
-          ></article>
-          <h2 style={{ padding: ".5rem" }}>{recipe.title}</h2>
+      <BadgeContainer id="badge-list">
+        {cousine &&
+          cousine.map((cousine) => (
+            <Badge
+              $isActive={filter === cousine}
+              key={cousine}
+              onClick={() => handleBadgeFilter(cousine)}
+            >
+              <IconDumpling />
+              {cousine}
+            </Badge>
+          ))}
+        {categories &&
+          categories.map((category) => (
+            <Badge
+              $isActive={filter === category}
+              key={category}
+              onClick={() => handleBadgeFilter(category)}
+            >
+              <IconCategory />
+              {category}
+            </Badge>
+          ))}
+      </BadgeContainer>
+      <RecipeSection id="recipe-list">
+        {currentRecipes.map((recipe) => (
           <div
-            style={{
+            key={recipe._id}
+            className={css({
               display: "flex",
+              flexDirection: "column",
               justifyContent: "center",
-              gap: ".5rem",
-              padding: ".5rem",
+              alignItems: "center",
+              gap: ".3rem",
+              height: "100%",
+              transition: "all 0.2s ease-in",
+              border: "1px solid var(--info-color)",
+              ":hover": {
+                color: "var(--accent-color)",
+                boxShadow: "10px 10px 0px var(--accent-color)",
+              },
+            })}
+            onClick={() => {
+              navigate({
+                to: `/${recipe._id}`,
+              });
             }}
           >
-            <Badge>
-              <IconCategory />
-              {recipe.category}
-            </Badge>
-            <Badge>
-              <IconDumpling />
-              {recipe.typeOfCuisine}
-            </Badge>
+            <article
+              className={css({
+                minHeight: "310px",
+                height: "100%",
+                backgroundImage: `url(${recipe.backgroundImg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                width: "100%",
+              })}
+            ></article>
+            <h2 style={{ padding: ".5rem" }}>{recipe.title}</h2>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: ".5rem",
+                padding: ".5rem",
+              }}
+            >
+              <Badge>
+                <IconCategory />
+                {recipe.category}
+              </Badge>
+              <Badge>
+                <IconDumpling />
+                {recipe.typeOfCuisine}
+              </Badge>
+            </div>
+            <p style={{ padding: ".5rem" }}>{recipe.description}</p>
           </div>
-          <p style={{ padding: ".5rem" }}>{recipe.description}</p>
-        </div>
-      ))}
-    </RecipeSection>
+        ))}
+      </RecipeSection>
     </>
   );
 };

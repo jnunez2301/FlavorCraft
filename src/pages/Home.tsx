@@ -4,7 +4,7 @@ import { Avatar } from "../components/Avatar";
 import { Menu, MenuOption } from "../components/Menu";
 import { useState } from "react";
 import { useSession } from "../auth/SessionContext";
-import { IconDoorExit, IconSunMoon } from "@tabler/icons-react";
+import { IconDoorExit, IconSoup, IconSunMoon } from "@tabler/icons-react";
 import { useResolveApi } from "../hooks/useResolveApi";
 import Modal from "../components/Modal";
 import Button from "../components/Button";
@@ -54,8 +54,9 @@ export const Home = () => {
           marginBottom: "1rem",
         })}
       >
-        <div style={{ flex: 1 }}>
-          <h1 style={{ fontSize: "2rem" }}>Flavor Craft</h1>
+        <div style={{ flex: 1, display: "flex", alignItems: 'center', gap: '.3rem' }}>
+          <IconSoup size={35} />
+          <h1 style={{ fontSize: "1.8rem" }}>Flavor Craft</h1>
         </div>
         <div style={{ display: "flex", gap: "1rem" }}>
           <IconSunMoon
