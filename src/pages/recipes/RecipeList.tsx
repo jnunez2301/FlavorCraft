@@ -21,7 +21,7 @@ const RecipeSection = styled.section`
 `;
 const BadgeContainer = styled.div`
   display: flex;
-  gap: .5rem;
+  gap: 0.5rem;
   padding: 0.5rem;
   overflow-x: auto;
   @media (max-width: 767px) {
@@ -90,61 +90,73 @@ const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
           ))}
       </BadgeContainer>
       <RecipeSection id="recipe-list">
-        {currentRecipes.map((recipe) => (
-          <div
-            key={recipe._id}
-            className={css({
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: ".3rem",
-              height: "100%",
-              transition: "all 0.2s ease-in",
-              border: "1px solid var(--info-color)",
-              ":hover": {
-                color: "var(--accent-color)",
-                boxShadow: "10px 10px 0px var(--accent-color)",
-              },
-            })}
-            onClick={() => {
-              navigate({
-                to: `/${recipe._id}`,
-              });
-            }}
-          >
-            <article
-              className={css({
-                minHeight: "310px",
-                height: "100%",
-                backgroundImage: `url(${recipe.backgroundImg})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                width: "100%",
-              })}
-            ></article>
-            <h2 style={{ padding: ".5rem" }}>{recipe.title}</h2>
+        {currentRecipes ? (
+          currentRecipes.map((recipe) => (
             <div
-              style={{
+              key={recipe._id}
+              className={css({
                 display: "flex",
+                flexDirection: "column",
                 justifyContent: "center",
-                gap: ".5rem",
-                padding: ".5rem",
+                alignItems: "center",
+                gap: ".3rem",
+                height: "100%",
+                transition: "all 0.2s ease-in",
+                border: "1px solid var(--info-color)",
+                ":hover": {
+                  color: "var(--accent-color)",
+                  boxShadow: "10px 10px 0px var(--accent-color)",
+                },
+              })}
+              onClick={() => {
+                navigate({
+                  to: `/${recipe._id}`,
+                });
               }}
             >
-              <Badge>
-                <IconCategory />
-                {recipe.category}
-              </Badge>
-              <Badge>
-                <IconDumpling />
-                {recipe.typeOfCuisine}
-              </Badge>
+              <article
+                className={css({
+                  minHeight: "310px",
+                  height: "100%",
+                  backgroundImage: `url(${recipe.backgroundImg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  width: "100%",
+                })}
+              ></article>
+              <h2 style={{ padding: ".5rem" }}>{recipe.title}</h2>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: ".5rem",
+                  padding: ".5rem",
+                }}
+              >
+                <Badge>
+                  <IconCategory />
+                  {recipe.category}
+                </Badge>
+                <Badge>
+                  <IconDumpling />
+                  {recipe.typeOfCuisine}
+                </Badge>
+              </div>
+              <p style={{ padding: ".5rem" }}>{recipe.description}</p>
             </div>
-            <p style={{ padding: ".5rem" }}>{recipe.description}</p>
+          ))
+        ) : (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+            flexDirection: 'column'
+          }}>
+            <p>Something is cooking...</p>
+            <img src="https://media.tenor.com/78VpRhlfpasAAAAM/munchlax-pokemon.gif" alt="Pokemon image"/>
           </div>
-        ))}
+        )}
       </RecipeSection>
     </>
   );

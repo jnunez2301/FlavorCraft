@@ -25,9 +25,11 @@ const RecipeBook = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSession]);
   return (
-    <section style={{
-      backgroundColor: "var(--bg-color)",
-    }}>
+    <section
+      style={{
+        backgroundColor: "var(--bg-color)",
+      }}
+    >
       <header>
         <h2
           style={{
@@ -53,13 +55,34 @@ const RecipeBook = () => {
           margin: "1rem 0",
         }}
       >
-        <AddRecipe onClick={() => {
-          navigate({
-            to: "/editor",
-          });
-        }}/>
+        <AddRecipe
+          onClick={() => {
+            navigate({
+              to: "/editor",
+            });
+          }}
+        />
       </nav>
-      {recipeList && <RecipeList recipes={recipeList} />}
+      {recipeList ? (
+        <RecipeList recipes={recipeList} />
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            flexDirection: "column",
+            alignItems: 'center'
+          }}
+        >
+          <p>Something is cooking...</p>
+          <img
+            src="https://media.tenor.com/78VpRhlfpasAAAAM/munchlax-pokemon.gif"
+            alt="Pokemon image"
+            width={320}
+          />
+        </div>
+      )}
     </section>
   );
 };
