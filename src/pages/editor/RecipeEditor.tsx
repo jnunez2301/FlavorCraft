@@ -27,6 +27,8 @@ import { useNavigate } from "@tanstack/react-router";
 import fileToBase64 from "../../util/fileToBase64";
 import styled from "@emotion/styled";
 import { fadeIn } from "../../util/animation";
+import DimmedText from "../../components/DimmedText";
+import toast from "react-hot-toast";
 const EditorContainer = styled.section`
   padding: 1rem;
   position: relative;
@@ -308,7 +310,16 @@ const NewRecipe = ({
     gap: "1rem",
   };
   const iconSize = 34;
-
+  function toastFieldLength(
+    event: React.ChangeEvent<HTMLInputElement>,
+    msg: string,
+    minLength: number
+  ) {
+    const value = event.target.value;
+    if (value.length < minLength) {
+      toast.error(msg);
+    }
+  }
   return (
     <EditorContainer id="recipe-editor">
       <form
@@ -674,6 +685,8 @@ const NewRecipe = ({
                 <InvisibleInput
                   placeholder="Main Dish, Dessert, etc."
                   $size="medium"
+                  minLength={3}
+                  onBlur={(event) => toastFieldLength(event, 'Please provide a larger category name', 3)}
                   {...form.getInputProps("category")}
                   required
                 />
@@ -686,7 +699,11 @@ const NewRecipe = ({
                 <InvisibleInput
                   placeholder="Korean, Mexican, etc."
                   $size="medium"
+                  minLength={3}
                   {...form.getInputProps("typeOfCuisine")}
+                  onBlur={(event) => {
+                    toastFieldLength(event, "Cousine name value must be longer", 3)
+                  }}
                   required
                 />
               </div>
@@ -700,6 +717,7 @@ const NewRecipe = ({
                   $size="medium"
                   value={caloriesPerServing}
                   min={1}
+                  max={3000}
                   type="number"
                   onChange={(event) => {
                     form.setFieldValue(
@@ -710,6 +728,10 @@ const NewRecipe = ({
                   }}
                 />
               </div>
+              <DimmedText>
+                Note: it's meant to be calories per serving <br />
+                *max allowed calories are 3000kcal
+              </DimmedText>
             </div>
             <div>
               <h4>Servings</h4>
@@ -720,6 +742,8 @@ const NewRecipe = ({
                   $size="medium"
                   value={servings}
                   type="number"
+                  max={20}
+                  maxLength={2}
                   min={1}
                   onChange={(event) => {
                     form.setFieldValue("servings", +event.target.value);
@@ -728,6 +752,7 @@ const NewRecipe = ({
                   required
                 />
               </div>
+              <DimmedText>*max allowed servings are 20</DimmedText>
             </div>
           </aside>
           <h2>Dish Photo</h2>

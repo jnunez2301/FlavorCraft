@@ -39,8 +39,8 @@ const RecipeList = ({ recipes = [] }: { recipes: Recipe[] }) => {
   const [filter, setFilter] = useState<string | null>(null);
   useEffect(() => {
     if (recipes) {
-      setCategories(recipes.map((recipe) => recipe.category));
-      setCousine(recipes.map((recipe) => recipe.typeOfCuisine));
+      setCategories([...new Set(recipes.map((recipe) => recipe.category))]);
+      setCousine([...new Set(recipes.map((recipe) => recipe.typeOfCuisine))]);
       setCurrentRecipes(recipes);
     }
   }, [recipes]);
